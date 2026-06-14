@@ -7,10 +7,10 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 @Configuration
-public class RedisConfig<V> {
+public class RedisConfig {
     @Bean("redisTemplate")
-    public RedisTemplate<String, V> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, V> template = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         // 设置key的序列化方式
         template.setKeySerializer(RedisSerializer.string());

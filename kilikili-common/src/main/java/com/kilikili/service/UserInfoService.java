@@ -90,4 +90,19 @@ public interface UserInfoService {
 
     // 登录
     TokenUserInfoDto login(String email, String password , String ip);
+
+    // 更新用户信息
+    void updateUserInfo(String userId, String nickName, String avatar, String birthday, String school, String personIntroduction, String noticeInfo);
+
+    // 更新用户主题
+    void updateTheme(String userId, Integer theme);
+
+    // 获取用户数量
+    Long getUserCount();
+
+    // 分页查询所有用户
+    PaginationResultVO<UserInfo> loadUserByPage(UserInfoQuery query);
+
+    // 修改用户状态
+    void changeUserStatus(String userId, Integer status);
 }

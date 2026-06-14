@@ -157,6 +157,61 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserInfo(String userId, String nickName, String avatar, String birthday, String school, String personIntroduction, String noticeInfo) {
+        UserInfo userInfo = userInfoMapper.selectByUserId(userId);
+        if (userInfo == null) {
+            throw new BusinessException("用户不存在");
+        }
+        if (nickName != null && !nickName.equals(userInfo.getNickName())) {
+            UserInfo nickNameUser = userInfoMapper.selectByNickName(nickName);
+            if (nickNameUser != null && !nickNameUser.getUserId().equals(userId)) {
+                throw new BusinessException(ResponseCodeEnum.NICK_NAME_EXIST);
+            }
+        }
+        userInfo.setNickName(nickName);
+        userInfo.setAvatar(avatar);
+        userInfo.setBirthday(birthday);
+        userInfo.setSchool(school);
+        userInfo.setPersonIntroduction(personIntroduction);
+        userInfo.setNoticeInfo(noticeInfo);
+        userInfoMapper.updateByUserId(userInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTheme(String userId, Integer theme) {
+        UserInfo userInfo = userInfoMapper.selectByUserId(userId);
+        if (userInfo == null) {
+            throw new BusinessException("用户不存在");
+        }
+        userInfo.setTheme(theme);
+        userInfoMapper.updateByUserId(userInfo);
+    }
+
+    @Override
+    public Long getUserCount() {
+        UserInfoQuery query = new UserInfoQuery();
+        return userInfoMapper.selectCountByCondition(query);
+    }
+
+    @Override
+    public PaginationResultVO<UserInfo> loadUserByPage(UserInfoQuery query) {
+        return getUserInfoListByPage(query);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changeUserStatus(String userId, Integer status) {
+        UserInfo userInfo = userInfoMapper.selectByUserId(userId);
+        if (userInfo == null) {
+            throw new BusinessException("用户不存在");
+        }
+        userInfo.setStatus(status);
+        userInfoMapper.updateByUserId(userInfo);
+    }
+
+    @Override
     public TokenUserInfoDto login( String email, String password, String ip) {
         UserInfo userInfo = userInfoMapper.selectByEmail(email);
         if (userInfo == null|| !userInfo.getPassword().equals(StringTools.encodeByMd5(password))) {

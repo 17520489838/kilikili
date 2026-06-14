@@ -1,4 +1,4 @@
-package com.kilikili.web.controller;
+package com.kilikili.admin.controller;
 
 import com.kilikili.entity.enums.ResponseCodeEnum;
 import com.kilikili.entity.vo.ResponseVO;
@@ -45,7 +45,7 @@ public class ABaseController {
     }
 
     protected void saveToken2Cookie(HttpServletResponse response,String token){
-        Cookie cookie = new Cookie("token", token);
+        Cookie cookie = new Cookie("admin_token", token);
         cookie.setMaxAge(60 * 60 * 24 * 7);// 7天
         cookie.setPath("/");// 根路径
         response.addCookie(cookie);// 添加Cookie
@@ -58,7 +58,7 @@ public class ABaseController {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("token".equals(cookie.getName())) {
+                if ("admin_token".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
@@ -70,7 +70,7 @@ public class ABaseController {
      * 清除Cookie中的token
      */
     protected void clearTokenFromCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", null);
+        Cookie cookie = new Cookie("admin_token", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);

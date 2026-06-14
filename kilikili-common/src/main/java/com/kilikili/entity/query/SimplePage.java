@@ -27,10 +27,13 @@ public class SimplePage implements Serializable {
     }
     
     public SimplePage(Integer pageNo, Integer pageSize, Long totalCount) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
-        this.totalCount = totalCount;
-        this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
-        this.startIndex = (pageNo - 1) * pageSize;
+        // 设置默认值，防止 null 导致空指针异常
+        this.pageNo = (pageNo == null || pageNo < 1) ? 1 : pageNo;
+        this.pageSize = (pageSize == null || pageSize < 1) ? 10 : pageSize;
+        this.totalCount = (totalCount == null) ? 0L : totalCount;
+        
+        // 计算总页数和起始索引
+        this.totalPage = (int) Math.ceil((double) this.totalCount / this.pageSize);
+        this.startIndex = (this.pageNo - 1) * this.pageSize;
     }
 }

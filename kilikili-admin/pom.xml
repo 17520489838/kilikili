@@ -27,15 +27,25 @@
             <version>1.0</version>
         </dependency>
 
+        <!-- Nashorn JS引擎，用于验证码算术表达式计算 -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.6.RELEASE</version>
                 <configuration>
-                    <mainClass>com.easylive.admin.EasyliveAdminRunApplication</mainClass>
+                    <mainClass>com.kilikili.admin.kilikiliadminRunApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,7 +1,5 @@
 server:
   port: 7070
-  servlet:
-    context-path: /admin
 spring:
   servlet:
     multipart:
@@ -36,6 +34,8 @@ spring:
     timeout: 2000
 #mybatis 大小写转驼峰
 mybatis:
+  mapper-locations: classpath*:com/mappers/*.xml
+  type-aliases-package: com.kilikili.entity.po
   configuration:
     map-underscore-to-camel-case: true
 
@@ -47,3 +47,14 @@ log:
 admin:
   account: admin
   password: admin123
+
+minio:
+  endpoint: http://127.0.0.1:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: kilikili
+
+management:
+  health:
+    elasticsearch:
+      enabled: false

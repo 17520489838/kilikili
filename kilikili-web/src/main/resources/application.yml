@@ -40,7 +40,18 @@ mybatis:
     map-underscore-to-camel-case: true
 
 project:
-  folder: d:/webser/easylive/
+  folder: d:/webser/kilikili/
 log:
   root:
     level: debug
+
+minio:
+  endpoint: http://127.0.0.1:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: kilikili
+
+management:
+  health:
+    elasticsearch:
+      enabled: false

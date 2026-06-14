@@ -1,4 +1,4 @@
-package com.kilikili.web.controller;
+package com.kilikili.admin.controller;
 
 import com.kilikili.entity.enums.ResponseCodeEnum;
 import com.kilikili.entity.vo.ResponseVO;

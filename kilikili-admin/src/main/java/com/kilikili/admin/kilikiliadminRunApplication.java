@@ -1,4 +1,4 @@
-package com.kilikili.web;
+package com.kilikili.admin;
 
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.kilikili.mappers")
 @EnableTransactionManagement
 @EnableScheduling
-public class kilikiliWebRunApplication {
+public class kilikiliadminRunApplication {
     public static void main(String[] args) {
-        org.springframework.boot.SpringApplication.run(kilikiliWebRunApplication.class, args);
+        org.springframework.boot.SpringApplication.run(kilikiliadminRunApplication.class, args);
     }
 }

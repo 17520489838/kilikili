@@ -36,9 +36,11 @@
         <commons.csv.version>1.2</commons.csv.version>
         <commons.codec.version>1.9</commons.codec.version>
         <commons.io.version>2.5</commons.io.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <captcha.verion>1.6.2</captcha.verion>
         <es.version>3.3.2</es.version>
+        <minio.version>8.5.2</minio.version>
+        <redisson.version>3.17.7</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -133,6 +135,27 @@
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${captcha.verion}</version>
+            </dependency>
+
+            <!-- Nashorn JS引擎，用于验证码算术表达式计算 -->
+            <dependency>
+                <groupId>org.openjdk.nashorn</groupId>
+                <artifactId>nashorn-core</artifactId>
+                <version>15.4</version>
+            </dependency>
+
+            <!-- MinIO 对象存储 -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+
+            <!-- Redisson 分布式锁 -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
         </dependencies>

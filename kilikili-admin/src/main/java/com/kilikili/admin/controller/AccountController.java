@@ -1,9 +1,9 @@
-package com.kilikili.web.controller;
+package com.kilikili.admin.controller;
 
 
 import com.kilikili.component.RedisComponent;
+import com.kilikili.config.Appconfig;
 import com.kilikili.entity.constants.Constants;
-import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,6 +34,8 @@ public class AccountController extends ABaseController {
     @Resource
     private RedisComponent redisComponent;
 
+    @Resource
+    private Appconfig appconfig;
 
     //验证码
     @RequestMapping("/checkCode")
@@ -50,29 +51,10 @@ public class AccountController extends ABaseController {
         return getSuccessResponseVO(result);
     }
 
-    //注册
-    @RequestMapping("/register")
-    public ResponseVO register (@NotEmpty  @Size(max=150) String email,
-                                @NotEmpty @Size(max=20) String nickName,
-                                @NotEmpty @Pattern(regexp = Constants.REGEX_PASSWORD) String registerPassword,
-                                @NotEmpty String checkCodeKey,
-                                @NotEmpty String checkCode){
-        try {
-            if(!checkCode.equalsIgnoreCase(redisComponent.getCheckCode(checkCodeKey))){
-                throw new BusinessException("图片验证码不正确");
-            }
-            userInfoService.register(email,nickName,registerPassword);
-            return  getSuccessResponseVO(null);
-        }finally {
-            redisComponent.cleanCheckCode(checkCodeKey);
-        }
-
-    }
-
     //登录
     @RequestMapping("/login")
     public ResponseVO login (HttpServletResponse response,// 响应对象
-                                @NotEmpty  @Size(max=150) String email,
+                                @NotEmpty  @Size(max=150) String account,
                              @NotEmpty @Pattern(regexp = Constants.REGEX_PASSWORD) String password,
                              @NotEmpty String checkCodeKey,
                              @NotEmpty String checkCode){
@@ -81,38 +63,16 @@ public class AccountController extends ABaseController {
                 throw new BusinessException("图片验证码不正确");
 
             }
-            String ip=getIpAddr();
-            TokenUserInfoDto tokenUserInfoDto =userInfoService.login(email,password,ip);
-            saveToken2Cookie(response,tokenUserInfoDto.getToken());
-            //设置 粉丝数,关注数,硬币数
-            return  getSuccessResponseVO(tokenUserInfoDto);
+
+            if (!account.equals(appconfig.getAdminAccount())|| !password.equals(appconfig.getAdminPassword())){
+                throw new BusinessException(ResponseCodeEnum.USER_NOT_EXIST_OR_PASSWORD_ERROR);
+            }
+            String token = redisComponent.saveTokenUserInfo4admin(account);
+            saveToken2Cookie(response,token);
+            return  getSuccessResponseVO(account);
         }finally {
             redisComponent.cleanCheckCode(checkCodeKey);
         }
-    }
-
-    //自动登录
-    @RequestMapping("/autoLogin")
-    public ResponseVO autoLogin(HttpServletResponse response) {
-        String token = getTokenFromCookie();
-        if (token == null || token.isEmpty()) {
-            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
-        }
-        
-        TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
-        if (tokenUserInfoDto == null) {
-            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
-        }
-        
-        if (tokenUserInfoDto.getExpireTime() != null && System.currentTimeMillis() > tokenUserInfoDto.getExpireTime()) {
-            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
-        }
-        
-        redisComponent.saveTokenUserInfo(tokenUserInfoDto);
-        
-        saveToken2Cookie(response, tokenUserInfoDto.getToken());
-        
-        return getSuccessResponseVO(tokenUserInfoDto);
     }
 
     //退出登录
@@ -122,8 +82,8 @@ public class AccountController extends ABaseController {
         String token = getTokenFromCookie();
         
         if (token != null && !token.isEmpty()) {
-            // 删除Redis中的token
-            redisComponent.deleteToken(token);
+            // 删除Redis中的admin token
+            redisComponent.deleteAdminToken(token);
         }
         
         // 清除Cookie中的token
