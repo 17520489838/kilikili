@@ -21,27 +21,37 @@ public class ScheduleConfig {
     private com.kilikili.config.Appconfig appconfig;
 
     /**
-     * 每天凌晨清理过期的上传临时文件
+     * 每天凌晨清理过期的分片上传临时文件
      */
     @Scheduled(cron = "0 0 3 * * ?")
     public void cleanTempFiles() {
         logger.info("开始清理临时文件...");
-        String projectFolder = appconfig.getProjectFolder();
-        if (projectFolder != null && !projectFolder.isEmpty()) {
-            File tempDir = new File(projectFolder, "temp");
-            if (tempDir.exists() && tempDir.isDirectory()) {
-                File[] files = tempDir.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.isFile() && System.currentTimeMillis() - file.lastModified() > 24 * 60 * 60 * 1000) {
-                            if (file.delete()) {
-                                logger.info("已删除临时文件: {}", file.getName());
-                            }
-                        }
+        File uploadDir = new File(System.getProperty("java.io.tmpdir"), "kilikili/upload");
+        if (uploadDir.exists() && uploadDir.isDirectory()) {
+            File[] uploadDirs = uploadDir.listFiles();
+            if (uploadDirs != null) {
+                for (File dir : uploadDirs) {
+                    if (dir.isDirectory() && System.currentTimeMillis() - dir.lastModified() > 24 * 60 * 60 * 1000) {
+                        deleteDir(dir);
+                        logger.info("已删除过期上传临时目录: {}", dir.getName());
                     }
                 }
             }
         }
         logger.info("临时文件清理完成");
+    }
+
+    private void deleteDir(File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDir(file);
+                } else {
+                    file.delete();
+                }
+            }
+        }
+        dir.delete();
     }
 }

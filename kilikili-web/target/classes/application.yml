@@ -8,7 +8,7 @@ spring:
   application:
     name: kilikili-web
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/kilikili?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/kilikili?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 1374460709Aa
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -50,6 +50,12 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: kilikili
+
+oss:
+  endpoint: oss-cn-shenzhen.aliyuncs.com
+  accessKeyId: ${OSS_ACCESS_KEY_ID}
+  accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
+  bucketName: yzh-myai
 
 management:
   health:

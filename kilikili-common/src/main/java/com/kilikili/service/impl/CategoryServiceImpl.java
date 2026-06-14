@@ -4,6 +4,8 @@ import com.kilikili.component.RedisComponent;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.Category;
 import com.kilikili.entity.query.CategoryQuery;
+import com.kilikili.entity.query.SimplePage;
+import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.mappers.CategoryMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.CategoryService;
@@ -20,8 +22,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Resource
     private CategoryMapper categoryMapper;
-    @Resource
-    private RedisComponent redisComponent;
     @Resource
     private RedisUtils<Object> redisUtils;
 
@@ -44,10 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
         return list;
     }
 
-    @Override
-    public List<Category> getCategoryList(CategoryQuery query) {
-        return categoryMapper.selectListByCondition(query);
-    }
+
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -100,5 +98,20 @@ public class CategoryServiceImpl implements CategoryService {
         }
         // Clear cache
         redisUtils.delete(REDIS_KEY_CATEGORY_LIST);
+    }
+
+    @Override
+    public Object getCategoryList(CategoryQuery query) {
+        Integer pageNo = query.getPageNo() != null ? query.getPageNo() : 1;
+        Integer pageSize = query.getPageSize() != null ? query.getPageSize() : 10;
+
+        Long totalCount = categoryMapper.selectCountByCondition(query);
+        SimplePage simplePage = new SimplePage(pageNo, pageSize, totalCount);
+
+        query.setPageNo(pageNo);
+        query.setPageSize(pageSize);
+
+        List<Category> list = categoryMapper.selectListByCondition(query);
+        return new PaginationResultVO<>(simplePage, list);
     }
 }

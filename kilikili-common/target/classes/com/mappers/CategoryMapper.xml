@@ -33,10 +33,11 @@
         )
     </insert>
 
-    <!-- 根据分类ID删除(逻辑删除) -->
-    <update id="deleteByCategoryId">
-        UPDATE kilikili_category SET is_deleted = 1 WHERE category_id = #{categoryId}
-    </update>
+    <!-- 根据分类ID删除 -->
+    <delete  id="deleteByCategoryId">
+        DELETE FROM kilikili_category
+        WHERE category_id = #{categoryId}
+    </delete>
 
     <!-- 根据分类ID更新 -->
     <update id="updateByCategoryId" parameterType="com.kilikili.entity.po.Category">

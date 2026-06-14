@@ -101,10 +101,11 @@
             <artifactId>easy-captcha</artifactId>
         </dependency>
 
-        <!-- MinIO -->
+        <!-- 阿里云OSS -->
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.oss.version}</version>
         </dependency>
 
         <!-- Redisson -->

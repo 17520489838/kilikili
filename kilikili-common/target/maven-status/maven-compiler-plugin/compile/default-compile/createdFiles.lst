@@ -70,7 +70,6 @@ com\kilikili\entity\constants\Constants.class
 com\kilikili\entity\enums\VideoStatusEnum.class
 com\kilikili\entity\query\VideoPQuery.class
 com\kilikili\entity\po\SeriesVideo.class
-com\kilikili\config\MinioConfig.class
 com\kilikili\service\CategoryService.class
 com\kilikili\config\WebSocketConfig.class
 com\kilikili\entity\po\Danmu.class
@@ -84,6 +83,7 @@ com\kilikili\service\UserActionService.class
 com\kilikili\service\impl\UserInfoServiceImpl.class
 com\kilikili\entity\po\UserInfo.class
 com\kilikili\entity\query\SeriesVideoQuery.class
+com\kilikili\config\OssConfig.class
 com\kilikili\service\impl\StatisticsServiceImpl.class
 com\kilikili\entity\po\VideoFile.class
 com\kilikili\service\VideoService.class

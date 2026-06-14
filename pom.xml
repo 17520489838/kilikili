@@ -40,6 +40,7 @@
         <captcha.verion>1.6.2</captcha.verion>
         <es.version>3.3.2</es.version>
         <minio.version>8.5.2</minio.version>
+        <aliyun.oss.version>3.17.4</aliyun.oss.version>
         <redisson.version>3.17.7</redisson.version>
     </properties>
 

@@ -30,6 +30,7 @@ D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\enums\MessageTypeEnum.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\po\SysSetting.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\enums\DateTimePatternEnum.java
+D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\config\OssConfig.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\po\VideoP.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\config\ScheduleConfig.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\mappers\CategoryMapper.java
@@ -74,7 +75,6 @@ D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\po\UserInfo.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\MessageService.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\UserCollectionService.java
-D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\config\MinioConfig.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\enums\ResponseCodeEnum.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\mappers\CommentMapper.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\UserFocusService.java

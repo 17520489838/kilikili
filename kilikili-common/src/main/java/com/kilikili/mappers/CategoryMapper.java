@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
     Integer insert(Category category);
-    Integer insertBatch(@Param("list") List<Category> list);
     Integer deleteByCategoryId(@Param("categoryId") Integer categoryId);
     Integer updateByCategoryId(Category category);
     Category selectByCategoryId(@Param("categoryId") Integer categoryId);

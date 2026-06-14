@@ -1,5 +1,7 @@
 package com.kilikili.service.impl;
 
+import com.aliyun.oss.OSS;
+import com.kilikili.config.OssConfig;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.UploadRecord;
 import com.kilikili.entity.po.VideoFile;
@@ -9,6 +11,8 @@ import com.kilikili.mappers.VideoFileMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoFileService;
 import com.kilikili.utils.StringTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +23,18 @@ import java.util.*;
 @Service("videoFileService")
 public class VideoFileServiceImpl implements VideoFileService {
 
+    private static final Logger logger = LoggerFactory.getLogger(VideoFileServiceImpl.class);
+
     @Resource
     private VideoFileMapper videoFileMapper;
     @Resource
     private UploadRecordMapper uploadRecordMapper;
     @Resource
     private RedisUtils<Object> redisUtils;
+    @Resource
+    private OSS ossClient;
+    @Resource
+    private OssConfig ossConfig;
 
     // Temporary folder for chunk uploads
     private static final String TEMP_FOLDER = System.getProperty("java.io.tmpdir") + "/kilikili/upload/";
@@ -134,28 +144,49 @@ public class VideoFileServiceImpl implements VideoFileService {
             throw new RuntimeException("合并文件失败", e);
         }
 
-        // Create VideoFile record
+        // Upload merged file to OSS
         String fileId = StringTools.getRandomNumber(Constants.LENGTH_10);
+        String objectKey = "video/" + fileId + "/" + record.getFileName();
+        try (FileInputStream fis = new FileInputStream(mergedFile)) {
+            ossClient.putObject(ossConfig.getBucketName(), objectKey, fis);
+            logger.info("视频文件上传至OSS成功: {}/{}", ossConfig.getBucketName(), objectKey);
+        } catch (IOException e) {
+            throw new RuntimeException("上传视频到OSS失败", e);
+        }
+
+        // Generate OSS URL
+        String ossUrl = "https://" + ossConfig.getBucketName() + "." + ossConfig.getEndpoint() + "/" + objectKey;
+
+        // Create VideoFile record
         VideoFile videoFile = new VideoFile();
         videoFile.setFileId(fileId);
         videoFile.setFileName(record.getFileName());
-        videoFile.setFilePath(mergedFile.getAbsolutePath());
+        videoFile.setFilePath(ossUrl);
         videoFile.setFileSize(mergedFile.length());
         videoFile.setUploadId(record.getUploadId());
         videoFile.setStatus(1); // upload complete
         videoFile.setCreateTime(new Date());
         videoFileMapper.insert(videoFile);
 
-        // Cleanup temp chunk files
-        File[] chunks = tempDir.listFiles();
-        if (chunks != null) {
-            for (File chunk : chunks) {
-                chunk.delete();
-            }
-        }
-        tempDir.delete();
+        // Cleanup temp files
+        cleanupLocalFiles(tempDir, mergedFile);
 
         return fileId;
+    }
+
+    private void cleanupLocalFiles(File tempDir, File mergedFile) {
+        if (tempDir.exists()) {
+            File[] chunks = tempDir.listFiles();
+            if (chunks != null) {
+                for (File chunk : chunks) {
+                    chunk.delete();
+                }
+            }
+            tempDir.delete();
+        }
+        if (mergedFile.exists()) {
+            mergedFile.delete();
+        }
     }
 
     @Override
@@ -188,8 +219,30 @@ public class VideoFileServiceImpl implements VideoFileService {
 
     @Override
     public String uploadImage(String file, Boolean createThumbnail) {
-        // File path is handled by controller; return the path for DB storage
-        return file;
+        File imageFile = new File(file);
+        if (!imageFile.exists()) {
+            throw new RuntimeException("图片文件不存在: " + file);
+        }
+
+        String fileName = imageFile.getName();
+        String ext = "";
+        int dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex > 0) {
+            ext = fileName.substring(dotIndex);
+        }
+
+        String objectKey = "image/" + StringTools.getRandomNumber(Constants.LENGTH_10) + ext;
+        try (FileInputStream fis = new FileInputStream(imageFile)) {
+            ossClient.putObject(ossConfig.getBucketName(), objectKey, fis);
+            logger.info("图片上传至OSS成功: {}/{}", ossConfig.getBucketName(), objectKey);
+        } catch (IOException e) {
+            throw new RuntimeException("上传图片到OSS失败", e);
+        }
+
+        // Clean up temp file
+        imageFile.delete();
+
+        return "https://" + ossConfig.getBucketName() + "." + ossConfig.getEndpoint() + "/" + objectKey;
     }
 
     @Override
