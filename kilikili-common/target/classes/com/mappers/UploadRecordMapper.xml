@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.UploadRecordMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.UploadRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="upload_id" property="uploadId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="file_name" property="fileName" jdbcType="VARCHAR"/>
+        <result column="file_size" property="fileSize" jdbcType="BIGINT"/>
+        <result column="chunk_count" property="chunkCount" jdbcType="INTEGER"/>
+        <result column="uploaded_chunks" property="uploadedChunks" jdbcType="INTEGER"/>
+        <result column="md5" property="md5" jdbcType="VARCHAR"/>
+        <result column="file_path" property="filePath" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, upload_id, user_id, file_name, file_size, chunk_count, uploaded_chunks,
+        md5, file_path, status, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入上传记录 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.UploadRecord">
+        INSERT INTO kilikili_upload_record (
+            upload_id, user_id, file_name, file_size, chunk_count,
+            uploaded_chunks, md5, file_path, status
+        ) VALUES (
+            #{uploadId}, #{userId}, #{fileName}, #{fileSize}, #{chunkCount},
+            #{uploadedChunks}, #{md5}, #{filePath}, #{status}
+        )
+    </insert>
+
+    <!-- 根据上传ID更新 -->
+    <update id="updateByUploadId" parameterType="com.kilikili.entity.po.UploadRecord">
+        UPDATE kilikili_upload_record
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="chunkCount != null">chunk_count = #{chunkCount},</if>
+            <if test="uploadedChunks != null">uploaded_chunks = #{uploadedChunks},</if>
+            <if test="md5 != null">md5 = #{md5},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE upload_id = #{uploadId}
+    </update>
+
+    <!-- 根据上传ID查询 -->
+    <select id="selectByUploadId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_upload_record
+        WHERE upload_id = #{uploadId} AND is_deleted = 0
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.uploadId != null and query.uploadId != ''">AND upload_id = #{query.uploadId}</if>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.fileName != null and query.fileName != ''">AND file_name LIKE CONCAT('%', #{query.fileName}, '%')</if>
+            <if test="query.status != null">AND status = #{query.status}</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_upload_record
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY create_time DESC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_upload_record
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>

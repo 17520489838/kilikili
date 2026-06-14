@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.DanmuMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.Danmu">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="danmu_id" property="danmuId" jdbcType="VARCHAR"/>
+        <result column="video_id" property="videoId" jdbcType="VARCHAR"/>
+        <result column="file_id" property="fileId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="time_point" property="timePoint" jdbcType="INTEGER"/>
+        <result column="mode" property="mode" jdbcType="INTEGER"/>
+        <result column="color" property="color" jdbcType="VARCHAR"/>
+        <result column="font_size" property="fontSize" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, danmu_id, video_id, file_id, user_id, content, time_point, mode,
+        color, font_size, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入弹幕 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.Danmu">
+        INSERT INTO kilikili_danmu (
+            danmu_id, video_id, file_id, user_id, content, time_point, mode, color, font_size
+        ) VALUES (
+            #{danmuId}, #{videoId}, #{fileId}, #{userId}, #{content}, #{timePoint}, #{mode}, #{color}, #{fontSize}
+        )
+    </insert>
+
+    <!-- 根据弹幕ID删除(逻辑删除) -->
+    <update id="deleteByDanmuId">
+        UPDATE kilikili_danmu SET is_deleted = 1 WHERE danmu_id = #{danmuId}
+    </update>
+
+    <!-- 根据弹幕ID更新 -->
+    <update id="updateByDanmuId" parameterType="com.kilikili.entity.po.Danmu">
+        UPDATE kilikili_danmu
+        <set>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="timePoint != null">time_point = #{timePoint},</if>
+            <if test="mode != null">mode = #{mode},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="fontSize != null">font_size = #{fontSize},</if>
+        </set>
+        WHERE danmu_id = #{danmuId}
+    </update>
+
+    <!-- 根据弹幕ID查询 -->
+    <select id="selectByDanmuId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_danmu
+        WHERE danmu_id = #{danmuId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据视频ID查询列表 -->
+    <select id="selectByVideoId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_danmu
+        WHERE video_id = #{videoId} AND is_deleted = 0
+        ORDER BY time_point ASC
+    </select>
+
+    <!-- 根据文件ID查询列表 -->
+    <select id="selectByFileId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_danmu
+        WHERE file_id = #{fileId} AND is_deleted = 0
+        ORDER BY time_point ASC
+    </select>
+
+    <!-- 查询所有弹幕 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_danmu
+        WHERE is_deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.danmuId != null and query.danmuId != ''">AND danmu_id = #{query.danmuId}</if>
+            <if test="query.videoId != null and query.videoId != ''">AND video_id = #{query.videoId}</if>
+            <if test="query.fileId != null and query.fileId != ''">AND file_id = #{query.fileId}</if>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.timePointStart != null">AND time_point &gt;= #{query.timePointStart}</if>
+            <if test="query.timePointEnd != null">AND time_point &lt;= #{query.timePointEnd}</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_danmu
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY time_point ASC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_danmu
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>

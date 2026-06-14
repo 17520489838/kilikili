@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="全功能基本实现,但文件上传功能仍然存在较大问题,后续修复">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f/storage_v2/_src_/schema/mysql.osA4Bg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f/storage_v2/_src_/schema/sys.zb4BAA.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/config/WebMvcConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/FileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/IndexController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/InteractController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/SettingController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/VideoInfoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/config/WebMvcConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/ABaseController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/AGlobalExceptionHandlerController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/AccountController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/CategoryController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/FileController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/IndexController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/InteractController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/SettingController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/UserController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/VideoInfoController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/interceptor/AppInterceptor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/interceptor/WebAppConfigurer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/kilikiliadminRunApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/logback-spring.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-admin/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/config/MinioConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/config/ScheduleConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/config/ThreadPoolConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/config/WebSocketConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/CommentStatusEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/FileStatusEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/MessageTypeEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/SexEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/UserActionTypeEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/UserStatusEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/VideoStatusEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Comment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Danmu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/PlayHistory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/SeriesVideo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/SysSetting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/UploadRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/UserAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/UserFocus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Video.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/VideoFile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/VideoP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/VideoSeries.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/CategoryQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/CommentQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/DanmuQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/MessageQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/PlayHistoryQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/SeriesVideoQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/SysSettingQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/UploadRecordQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/UserActionQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/UserFocusQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/VideoFileQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/VideoPQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/VideoQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/VideoSeriesQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/CategoryMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/CommentMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/DanmuMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/MessageMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/PlayHistoryMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/SeriesVideoMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/SysSettingMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/UploadRecordMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/UserActionMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/UserFocusMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/VideoFileMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/VideoMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/VideoPMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/VideoSeriesMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/CategoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/CommentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/DanmuService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/MessageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/PlayHistoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/StatisticsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/SysSettingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/UserActionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/UserCollectionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/UserFocusService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoFileService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoSeriesService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/CategoryServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/CommentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/DanmuServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/MessageServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/PlayHistoryServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/StatisticsServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/SysSettingServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/UserActionServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/UserCollectionServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/UserFocusServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoFileServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoSeriesServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/utils/FFmpegUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/utils/StringTools.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/websocket/MessageWebSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/CategoryMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/CommentMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/DanmuMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/MessageMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/PlayHistoryMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/SeriesVideoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/SysSettingMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UploadRecordMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UserActionMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UserFocusMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UserInfoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/VideoFileMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/VideoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/VideoPMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/VideoSeriesMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/component/RedisComponent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/config/Appconfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/config/MinioConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/config/ScheduleConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/config/ThreadPoolConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/config/WebSocketConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/constants/Constants.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/dto/TokenUserInfoDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/CommentStatusEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/DateTimePatternEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/FileStatusEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/MessageTypeEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/PageSize.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/ResponseCodeEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/SexEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/UserActionTypeEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/UserStatusEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/VideoStatusEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Category.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Comment.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Danmu.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Message.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/PlayHistory.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/SeriesVideo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/SysSetting.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/UploadRecord.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/UserAction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/UserFocus.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/UserInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Video.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/VideoFile.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/VideoP.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/VideoSeries.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/BaseParma.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/CategoryQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/CommentQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/DanmuQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/MessageQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/PlayHistoryQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/SeriesVideoQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/SimplePage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/SysSettingQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/UploadRecordQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/UserActionQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/UserFocusQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/UserInfoQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/VideoFileQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/VideoPQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/VideoQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/VideoSeriesQuery.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/vo/PaginationResultVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/vo/ResponseVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/vo/geterrorResponseVO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/exception/BusinessException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/BaseMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/CategoryMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/CommentMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/DanmuMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/MessageMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/PlayHistoryMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/SeriesVideoMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/SysSettingMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/UploadRecordMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/UserActionMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/UserFocusMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/UserInfoMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoFileMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoPMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoSeriesMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/redis/RedisConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/redis/RedisUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/CategoryService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/CommentService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/DanmuService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/MessageService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/PlayHistoryService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/StatisticsService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/SysSettingService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserActionService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserCollectionService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserFocusService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserInfoService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoFileService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoSeriesService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/CategoryServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/CommentServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/DanmuServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/MessageServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/PlayHistoryServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/StatisticsServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/SysSettingServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserActionServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserCollectionServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserFocusServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserInfoServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoFileServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoSeriesServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/utils/CopyTools.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/utils/FFmpegUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/utils/StringTools.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/websocket/MessageWebSocket.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/CategoryMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/CommentMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/DanmuMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/MessageMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/PlayHistoryMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/SeriesVideoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/SysSettingMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/UploadRecordMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/UserActionMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/UserFocusMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/UserInfoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/VideoFileMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/VideoMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/VideoPMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/VideoSeriesMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/kilikili-common-1.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/config/WebMvcConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/AccountInfoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/CategoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/CommentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/DanmuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/FileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/HistoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/MessageController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/SeriesController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/SysSettingController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UcenterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UhomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UserActionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/VideoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/config/WebMvcConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/ABaseController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/AGlobalExceptionHandlerController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/AccountController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/AccountInfoController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/CategoryController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/CommentController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/DanmuController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/FileController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/HistoryController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/MessageController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/SeriesController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/SysSettingController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UcenterController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UhomeController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UserActionController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/VideoController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/kilikiliWebRunApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/classes/logback-spring.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kilikili-web/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;17520489838&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/17520489838/kilikili.git&quot;,
+    &quot;accountId&quot;: &quot;463a718b-113a-461c-8654-3430ff5771da&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="userSettingsFile" value="D:\develop\apache-maven-3.9.12\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="3DlBv6L12h5ETtqAgvin9RMXPkG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;发现新的/更新的数据库配置&quot;,
+    &quot;Notification.DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.kilikiliWebRunApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.kilikiliadminRunApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.kilikiliadminWebRunApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/kilikili-all/kilikili-java&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;全局库&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Qoder CN&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora&quot;
+    ],
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL 方言&quot;: [
+      &quot;MySQL&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\kilikili-java\kilikili-web\src\main\resources" />
+      <recent name="D:\kilikili-java\kilikili-admin\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\kilikili-java\kilikili-common\src\main\java\com\kilikili\" />
+      <recent name="D:\kilikili-java\kilikili-web\src\main\java\com\kilikili\web\" />
+      <recent name="D:\kilikili-java\kilikili-web\src\main\java\com\kilikili\web\controller" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.kilikili.admin.controller" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+    <option name="configurationStatuses">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <map>
+              <entry key="kilikiliWebRunApplication" value="STOPPED" />
+              <entry key="kilikiliadminRunApplication" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.kilikiliadminRunApplication">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="kilikili-java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="kilikili-java" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="kilikiliWebRunApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="kilikili-web" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.kilikili.web.kilikiliWebRunApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.kilikili.web.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="kilikiliadminRunApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="kilikili-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.kilikili.admin.kilikiliadminRunApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.kilikili.admin.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.kilikiliWebRunApplication" />
+        <item itemvalue="Spring Boot.kilikiliadminRunApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="" />
+      <created>1778847004039</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1778847004039</updated>
+      <workItem from="1778847005275" duration="205000" />
+      <workItem from="1778899365074" duration="17000" />
+      <workItem from="1778909585112" duration="438000" />
+      <workItem from="1778911122930" duration="1946000" />
+      <workItem from="1778913082836" duration="257000" />
+      <workItem from="1778913349093" duration="615000" />
+      <workItem from="1778913978340" duration="17000" />
+      <workItem from="1778913998303" duration="310000" />
+      <workItem from="1778914320908" duration="1507000" />
+      <workItem from="1778915849037" duration="3185000" />
+      <workItem from="1778990289504" duration="3119000" />
+      <workItem from="1778998085843" duration="8522000" />
+      <workItem from="1779017080993" duration="1936000" />
+      <workItem from="1779019031603" duration="5453000" />
+      <workItem from="1779063208647" duration="323000" />
+      <workItem from="1779069551871" duration="10614000" />
+      <workItem from="1779110157962" duration="2474000" />
+      <workItem from="1779161763339" duration="4187000" />
+      <workItem from="1779670855141" duration="14000" />
+      <workItem from="1780278814326" duration="7228000" />
+      <workItem from="1780313337099" duration="3895000" />
+      <workItem from="1780629162023" duration="52000" />
+      <workItem from="1780877625789" duration="11668000" />
+      <workItem from="1780911230150" duration="6382000" />
+      <workItem from="1781415532116" duration="243000" />
+      <workItem from="1781415792189" duration="361000" />
+    </task>
+    <task id="LOCAL-00001" summary="实现登录注册功能">
+      <option name="closed" value="true" />
+      <created>1779111314912</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1779111314912</updated>
+    </task>
+    <task id="LOCAL-00002" summary="全功能基本实现,但文件上传功能仍然存在较大问题,后续修复">
+      <option name="closed" value="true" />
+      <created>1781415946837</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1781415946837</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="实现登录注册功能" />
+    <MESSAGE value="全功能基本实现,但文件上传功能仍然存在较大问题,后续修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="全功能基本实现,但文件上传功能仍然存在较大问题,后续修复" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/UserInfoMapper.java</url>
+          <line>85</line>
+          <properties class="com.kilikili.mappers.UserInfoMapper" method="selectListByCondition">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/AccountController.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

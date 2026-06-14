@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.VideoPMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.VideoP">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="p_id" property="pId" jdbcType="VARCHAR"/>
+        <result column="video_id" property="videoId" jdbcType="VARCHAR"/>
+        <result column="p_name" property="pName" jdbcType="VARCHAR"/>
+        <result column="file_id" property="fileId" jdbcType="VARCHAR"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, p_id, video_id, p_name, file_id, duration, sort, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入视频分P -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.VideoP">
+        INSERT INTO kilikili_video_p (
+            p_id, video_id, p_name, file_id, duration, sort
+        ) VALUES (
+            #{pId}, #{videoId}, #{pName}, #{fileId}, #{duration}, #{sort}
+        )
+    </insert>
+
+    <!-- 根据分PID删除(逻辑删除) -->
+    <update id="deleteByPId">
+        UPDATE kilikili_video_p SET is_deleted = 1 WHERE p_id = #{pId}
+    </update>
+
+    <!-- 根据视频ID删除(逻辑删除) -->
+    <update id="deleteByVideoId">
+        UPDATE kilikili_video_p SET is_deleted = 1 WHERE video_id = #{videoId}
+    </update>
+
+    <!-- 根据分PID更新 -->
+    <update id="updateByPId" parameterType="com.kilikili.entity.po.VideoP">
+        UPDATE kilikili_video_p
+        <set>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="pName != null">p_name = #{pName},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </set>
+        WHERE p_id = #{pId}
+    </update>
+
+    <!-- 根据分PID查询 -->
+    <select id="selectByPId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_p
+        WHERE p_id = #{pId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据视频ID查询列表 -->
+    <select id="selectByVideoId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_p
+        WHERE video_id = #{videoId} AND is_deleted = 0
+        ORDER BY sort ASC
+    </select>
+
+    <!-- 查询所有视频分P -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_p
+        WHERE is_deleted = 0
+        ORDER BY sort ASC
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.pId != null and query.pId != ''">AND p_id = #{query.pId}</if>
+            <if test="query.videoId != null and query.videoId != ''">AND video_id = #{query.videoId}</if>
+            <if test="query.fileId != null and query.fileId != ''">AND file_id = #{query.fileId}</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_p
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY sort ASC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_video_p
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>

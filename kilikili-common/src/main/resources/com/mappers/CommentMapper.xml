@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.CommentMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.Comment">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="comment_id" property="commentId" jdbcType="VARCHAR"/>
+        <result column="video_id" property="videoId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="img_path" property="imgPath" jdbcType="VARCHAR"/>
+        <result column="p_comment_id" property="pCommentId" jdbcType="VARCHAR"/>
+        <result column="reply_user_id" property="replyUserId" jdbcType="VARCHAR"/>
+        <result column="like_count" property="likeCount" jdbcType="INTEGER"/>
+        <result column="top_type" property="topType" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, comment_id, video_id, user_id, content, img_path, p_comment_id,
+        reply_user_id, like_count, top_type, status, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入评论 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.Comment">
+        INSERT INTO kilikili_comment (
+            comment_id, video_id, user_id, content, img_path, p_comment_id,
+            reply_user_id, like_count, top_type, status
+        ) VALUES (
+            #{commentId}, #{videoId}, #{userId}, #{content}, #{imgPath}, #{pCommentId},
+            #{replyUserId}, #{likeCount}, #{topType}, #{status}
+        )
+    </insert>
+
+    <!-- 根据评论ID删除(逻辑删除) -->
+    <update id="deleteByCommentId">
+        UPDATE kilikili_comment SET is_deleted = 1 WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 根据评论ID更新 -->
+    <update id="updateByCommentId" parameterType="com.kilikili.entity.po.Comment">
+        UPDATE kilikili_comment
+        <set>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imgPath != null">img_path = #{imgPath},</if>
+            <if test="pCommentId != null">p_comment_id = #{pCommentId},</if>
+            <if test="replyUserId != null">reply_user_id = #{replyUserId},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="topType != null">top_type = #{topType},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 根据评论ID查询 -->
+    <select id="selectByCommentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_comment
+        WHERE comment_id = #{commentId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据视频ID查询列表 -->
+    <select id="selectByVideoId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_comment
+        WHERE video_id = #{videoId} AND is_deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询所有评论 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_comment
+        WHERE is_deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.commentId != null and query.commentId != ''">AND comment_id = #{query.commentId}</if>
+            <if test="query.videoId != null and query.videoId != ''">AND video_id = #{query.videoId}</if>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.pCommentId != null and query.pCommentId != ''">AND p_comment_id = #{query.pCommentId}</if>
+            <if test="query.status != null">AND status = #{query.status}</if>
+            <if test="query.topType != null">AND top_type = #{query.topType}</if>
+            <if test="query.createTimeStart != null">AND create_time &gt;= #{query.createTimeStart}</if>
+            <if test="query.createTimeEnd != null">AND create_time &lt;= #{query.createTimeEnd}</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_comment
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY create_time DESC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_comment
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>

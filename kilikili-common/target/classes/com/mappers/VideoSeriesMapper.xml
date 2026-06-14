@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.VideoSeriesMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.VideoSeries">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="series_id" property="seriesId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="series_name" property="seriesName" jdbcType="VARCHAR"/>
+        <result column="series_cover" property="seriesCover" jdbcType="VARCHAR"/>
+        <result column="series_description" property="seriesDescription" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, series_id, user_id, series_name, series_cover, series_description,
+        sort, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入视频系列 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.VideoSeries">
+        INSERT INTO kilikili_video_series (
+            series_id, user_id, series_name, series_cover, series_description, sort
+        ) VALUES (
+            #{seriesId}, #{userId}, #{seriesName}, #{seriesCover}, #{seriesDescription}, #{sort}
+        )
+    </insert>
+
+    <!-- 根据系列ID删除(逻辑删除) -->
+    <update id="deleteBySeriesId">
+        UPDATE kilikili_video_series SET is_deleted = 1 WHERE series_id = #{seriesId}
+    </update>
+
+    <!-- 根据系列ID更新 -->
+    <update id="updateBySeriesId" parameterType="com.kilikili.entity.po.VideoSeries">
+        UPDATE kilikili_video_series
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="seriesName != null">series_name = #{seriesName},</if>
+            <if test="seriesCover != null">series_cover = #{seriesCover},</if>
+            <if test="seriesDescription != null">series_description = #{seriesDescription},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </set>
+        WHERE series_id = #{seriesId}
+    </update>
+
+    <!-- 根据系列ID查询 -->
+    <select id="selectBySeriesId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_series
+        WHERE series_id = #{seriesId} AND is_deleted = 0
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.seriesId != null and query.seriesId != ''">AND series_id = #{query.seriesId}</if>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.seriesName != null and query.seriesName != ''">AND series_name LIKE CONCAT('%', #{query.seriesName}, '%')</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video_series
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY sort ASC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_video_series
+        <include refid="Where_Condition"/>
+    </select>
+
+    <!-- 批量插入视频系列 -->
+    <insert id="insertBatch">
+        INSERT INTO kilikili_video_series (
+            series_id, user_id, series_name, series_cover, series_description, sort
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.seriesId}, #{item.userId}, #{item.seriesName}, #{item.seriesCover},
+                #{item.seriesDescription}, #{item.sort}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

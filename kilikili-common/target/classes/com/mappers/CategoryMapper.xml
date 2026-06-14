@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.CategoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.Category">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="p_category_id" property="pCategoryId" jdbcType="INTEGER"/>
+        <result column="category_code" property="categoryCode" jdbcType="VARCHAR"/>
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="background" property="background" jdbcType="VARCHAR"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, category_id, p_category_id, category_code, category_name, icon, background,
+        sort, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入分类 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.Category">
+        INSERT INTO kilikili_category (
+            category_id, p_category_id, category_code, category_name, icon, background, sort
+        ) VALUES (
+            #{categoryId}, #{pCategoryId}, #{categoryCode}, #{categoryName}, #{icon}, #{background}, #{sort}
+        )
+    </insert>
+
+    <!-- 根据分类ID删除(逻辑删除) -->
+    <update id="deleteByCategoryId">
+        UPDATE kilikili_category SET is_deleted = 1 WHERE category_id = #{categoryId}
+    </update>
+
+    <!-- 根据分类ID更新 -->
+    <update id="updateByCategoryId" parameterType="com.kilikili.entity.po.Category">
+        UPDATE kilikili_category
+        <set>
+            <if test="pCategoryId != null">p_category_id = #{pCategoryId},</if>
+            <if test="categoryCode != null">category_code = #{categoryCode},</if>
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="background != null">background = #{background},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </set>
+        WHERE category_id = #{categoryId}
+    </update>
+
+    <!-- 根据分类ID查询 -->
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_category
+        WHERE category_id = #{categoryId} AND is_deleted = 0
+    </select>
+
+    <!-- 查询所有分类 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_category
+        WHERE is_deleted = 0
+        ORDER BY sort ASC
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.categoryId != null">AND category_id = #{query.categoryId}</if>
+            <if test="query.pCategoryId != null">AND p_category_id = #{query.pCategoryId}</if>
+            <if test="query.categoryCode != null and query.categoryCode != ''">AND category_code = #{query.categoryCode}</if>
+            <if test="query.categoryNameFuzzy != null and query.categoryNameFuzzy != ''">AND category_name LIKE CONCAT('%', #{query.categoryNameFuzzy}, '%')</if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_category
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY sort ASC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_category
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>

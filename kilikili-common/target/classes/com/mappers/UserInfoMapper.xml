@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.UserInfoMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.UserInfo">
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="TINYINT"/>
+        <result column="birthday" property="birthday" jdbcType="VARCHAR"/>
+        <result column="school" property="school" jdbcType="VARCHAR"/>
+        <result column="person_introduction" property="personIntroduction" jdbcType="VARCHAR"/>
+        <result column="join_time" property="joinTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="notice_info" property="noticeInfo" jdbcType="VARCHAR"/>
+        <result column="total_coin_count" property="coinCount" jdbcType="INTEGER"/>
+        <result column="current_coin_count" property="currentCoinCount" jdbcType="INTEGER"/>
+        <result column="theme" property="theme" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        user_id, nick_name, email, password, avatar, sex, birthday, school, person_introduction,
+        join_time, last_login_time, last_login_ip, status, notice_info, total_coin_count,
+        current_coin_count, theme
+    </sql>
+
+    <!-- 插入用户 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.UserInfo">
+        INSERT INTO kilikili_user_info (
+            user_id, nick_name, email, password, avatar, sex, birthday, school,
+            person_introduction, join_time, last_login_time, last_login_ip,
+            status, notice_info, total_coin_count, current_coin_count, theme
+        ) VALUES (
+            #{userId}, #{nickName}, #{email}, #{password}, #{avatar}, #{sex}, #{birthday}, #{school},
+            #{personIntroduction}, #{joinTime}, #{lastLoginTime}, #{lastLoginIp},
+            #{status}, #{noticeInfo}, #{coinCount}, #{currentCoinCount}, #{theme}
+        )
+    </insert>
+
+    <!-- 根据用户ID删除(逻辑删除) -->
+    <update id="deleteByUserId">
+        UPDATE kilikili_user_info SET is_deleted = 1 WHERE user_id = #{userId}
+    </update>
+
+    <!-- 根据邮箱删除(逻辑删除) -->
+    <update id="deleteByEmail">
+        UPDATE kilikili_user_info SET is_deleted = 1 WHERE email = #{email}
+    </update>
+
+    <!-- 根据用户ID更新 -->
+    <update id="updateByUserId" parameterType="com.kilikili.entity.po.UserInfo">
+        UPDATE kilikili_user_info
+        <set>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="personIntroduction != null">person_introduction = #{personIntroduction},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="lastLoginIp != null">last_login_ip = #{lastLoginIp},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="noticeInfo != null">notice_info = #{noticeInfo},</if>
+            <if test="coinCount != null">total_coin_count = #{coinCount},</if>
+            <if test="currentCoinCount != null">current_coin_count = #{currentCoinCount},</if>
+            <if test="theme != null">theme = #{theme},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 根据邮箱更新 -->
+    <update id="updateByEmail" parameterType="com.kilikili.entity.po.UserInfo">
+        UPDATE kilikili_user_info
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="personIntroduction != null">person_introduction = #{personIntroduction},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="lastLoginIp != null">last_login_ip = #{lastLoginIp},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="noticeInfo != null">notice_info = #{noticeInfo},</if>
+            <if test="coinCount != null">total_coin_count = #{coinCount},</if>
+            <if test="currentCoinCount != null">current_coin_count = #{currentCoinCount},</if>
+            <if test="theme != null">theme = #{theme},</if>
+        </set>
+        WHERE email = #{email}
+    </update>
+
+    <!-- 根据用户ID查询 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_info
+        WHERE user_id = #{userId} AND is_deleted = 0
+    </select>
+
+    <!-- 根据邮箱查询 -->
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_info
+        WHERE email = #{email} AND is_deleted = 0
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_info
+        WHERE is_deleted = 0
+        ORDER BY join_time DESC
+    </select>
+
+    <!-- 批量插入用户 -->
+    <insert id="insertBatch">
+        INSERT INTO kilikili_user_info (
+            user_id, nick_name, email, password, avatar, sex, birthday, school,
+            person_introduction, join_time, last_login_time, last_login_ip,
+            status, notice_info, total_coin_count, current_coin_count, theme
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.userId}, #{item.nickName}, #{item.email}, #{item.password},
+                #{item.avatar}, #{item.sex}, #{item.birthday}, #{item.school}, #{item.personIntroduction},
+                #{item.joinTime}, #{item.lastLoginTime}, #{item.lastLoginIp},
+                #{item.status}, #{item.noticeInfo}, #{item.coinCount},
+                #{item.currentCoinCount}, #{item.theme}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据昵称删除(逻辑删除) -->
+    <update id="deleteByNickName">
+        UPDATE kilikili_user_info SET is_deleted = 1 WHERE nick_name = #{nickName}
+    </update>
+
+    <!-- 批量删除用户(逻辑删除) -->
+    <delete id="deleteBatch">
+        UPDATE kilikili_user_info SET is_deleted = 1 WHERE user_id IN
+        <foreach collection="userIdList" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <!-- 根据昵称更新 -->
+    <update id="updateByNickName" parameterType="com.kilikili.entity.po.UserInfo">
+        UPDATE kilikili_user_info
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="school != null">school = #{school},</if>
+            <if test="personIntroduction != null">person_introduction = #{personIntroduction},</if>
+            <if test="joinTime != null">join_time = #{joinTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="lastLoginIp != null">last_login_ip = #{lastLoginIp},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="noticeInfo != null">notice_info = #{noticeInfo},</if>
+            <if test="coinCount != null">total_coin_count = #{coinCount},</if>
+            <if test="currentCoinCount != null">current_coin_count = #{currentCoinCount},</if>
+            <if test="theme != null">theme = #{theme},</if>
+        </set>
+        WHERE nick_name = #{nickName}
+    </update>
+
+    <!-- 根据条件更新 -->
+    <update id="updateByCondition">
+        UPDATE kilikili_user_info
+        <set>
+            <if test="userInfo.nickName != null">nick_name = #{userInfo.nickName},</if>
+            <if test="userInfo.email != null">email = #{userInfo.email},</if>
+            <if test="userInfo.password != null">password = #{userInfo.password},</if>
+            <if test="userInfo.sex != null">sex = #{userInfo.sex},</if>
+            <if test="userInfo.birthday != null">birthday = #{userInfo.birthday},</if>
+            <if test="userInfo.school != null">school = #{userInfo.school},</if>
+            <if test="userInfo.personIntroduction != null">person_introduction = #{userInfo.personIntroduction},</if>
+            <if test="userInfo.joinTime != null">join_time = #{userInfo.joinTime},</if>
+            <if test="userInfo.lastLoginTime != null">last_login_time = #{userInfo.lastLoginTime},</if>
+            <if test="userInfo.lastLoginIp != null">last_login_ip = #{userInfo.lastLoginIp},</if>
+            <if test="userInfo.status != null">status = #{userInfo.status},</if>
+            <if test="userInfo.noticeInfo != null">notice_info = #{userInfo.noticeInfo},</if>
+            <if test="userInfo.coinCount != null">coin_count = #{userInfo.coinCount},</if>
+            <if test="userInfo.currentCoinCount != null">current_coin_count = #{userInfo.currentCoinCount},</if>
+            <if test="userInfo.theme != null">theme = #{userInfo.theme},</if>
+        </set>
+        <where>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.email != null and query.email != ''">AND email = #{query.email}</if>
+            <if test="query.nickName != null and query.nickName != ''">AND nick_name = #{query.nickName}</if>
+            <if test="query.status != null">AND status = #{query.status}</if>
+            <if test="query.sex != null">AND sex = #{query.sex}</if>
+            <if test="query.school != null and query.school != ''">AND school = #{query.school}</if>
+            <if test="query.joinTimeStart != null">AND join_time &gt;= #{query.joinTimeStart}</if>
+            <if test="query.joinTimeEnd != null">AND join_time &lt;= #{query.joinTimeEnd}</if>
+        </where>
+    </update>
+
+    <!-- 根据昵称查询 -->
+    <select id="selectByNickName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_info
+        WHERE nick_name = #{nickName}
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.userIdList != null and query.userIdList.size() > 0">
+                AND user_id IN
+                <foreach collection="query.userIdList" item="userId" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+            <if test="query.email != null and query.email != ''">AND email = #{query.email}</if>
+            <if test="query.emailList != null and query.emailList.size() > 0">
+                AND email IN
+                <foreach collection="query.emailList" item="email" open="(" separator="," close=")">
+                    #{email}
+                </foreach>
+            </if>
+            <if test="query.nickName != null and query.nickName != ''">AND nick_name LIKE CONCAT('%', #{query.nickName}, '%')</if>
+            <if test="query.sex != null">AND sex = #{query.sex}</if>
+            <if test="query.birthday != null and query.birthday != ''">AND birthday = #{query.birthday}</if>
+            <if test="query.school != null and query.school != ''">AND school LIKE CONCAT('%', #{query.school}, '%')</if>
+            <if test="query.status != null">AND status = #{query.status}</if>
+            <if test="query.lastLoginIp != null and query.lastLoginIp != ''">AND last_login_ip = #{query.lastLoginIp}</if>
+            <if test="query.joinTimeStart != null">AND join_time &gt;= #{query.joinTimeStart}</if>
+            <if test="query.joinTimeEnd != null">AND join_time &lt;= #{query.joinTimeEnd}</if>
+            <if test="query.lastLoginTimeStart != null">AND last_login_time &gt;= #{query.lastLoginTimeStart}</if>
+            <if test="query.lastLoginTimeEnd != null">AND last_login_time &lt;= #{query.lastLoginTimeEnd}</if>
+            <if test="query.keyword != null and query.keyword != ''">
+                AND (nick_name LIKE CONCAT('%', #{query.keyword}, '%')
+                OR email LIKE CONCAT('%', #{query.keyword}, '%')
+                OR school LIKE CONCAT('%', #{query.keyword}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_info
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY join_time DESC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_user_info
+        <include refid="Where_Condition"/>
+    </select>
+
+
+</mapper>

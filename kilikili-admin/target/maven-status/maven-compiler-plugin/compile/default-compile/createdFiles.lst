@@ -1,0 +1,14 @@
+com\kilikili\admin\controller\AccountController.class
+com\kilikili\admin\controller\CategoryController.class
+com\kilikili\admin\controller\VideoInfoController.class
+com\kilikili\admin\controller\SettingController.class
+com\kilikili\admin\controller\IndexController.class
+com\kilikili\admin\interceptor\WebAppConfigurer.class
+com\kilikili\admin\controller\ABaseController.class
+com\kilikili\admin\controller\FileController.class
+com\kilikili\admin\controller\InteractController.class
+com\kilikili\admin\controller\UserController.class
+com\kilikili\admin\kilikiliadminRunApplication.class
+com\kilikili\admin\config\WebMvcConfig.class
+com\kilikili\admin\controller\AGlobalExceptionHandlerController.class
+com\kilikili\admin\interceptor\AppInterceptor.class

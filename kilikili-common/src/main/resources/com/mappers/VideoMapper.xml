@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.VideoMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.Video">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="video_id" property="videoId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
+        <result column="video_cover" property="videoCover" jdbcType="VARCHAR"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="p_category_id" property="pCategoryId" jdbcType="INTEGER"/>
+        <result column="post_type" property="postType" jdbcType="INTEGER"/>
+        <result column="tags" property="tags" jdbcType="VARCHAR"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
+        <result column="interaction" property="interaction" jdbcType="VARCHAR"/>
+        <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="play_count" property="playCount" jdbcType="INTEGER"/>
+        <result column="like_count" property="likeCount" jdbcType="INTEGER"/>
+        <result column="coin_count" property="coinCount" jdbcType="INTEGER"/>
+        <result column="collect_count" property="collectCount" jdbcType="INTEGER"/>
+        <result column="comment_count" property="commentCount" jdbcType="INTEGER"/>
+        <result column="danmu_count" property="danmuCount" jdbcType="INTEGER"/>
+        <result column="share_count" property="shareCount" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="recommend_type" property="recommendType" jdbcType="INTEGER"/>
+        <result column="audit_reason" property="auditReason" jdbcType="VARCHAR"/>
+        <result column="last_play_time" property="lastPlayTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, video_id, user_id, video_name, video_cover, category_id, p_category_id,
+        post_type, tags, introduction, interaction, duration, play_count, like_count,
+        coin_count, collect_count, comment_count, danmu_count, share_count, status,
+        recommend_type, audit_reason, last_play_time, create_time, update_time, is_deleted
+    </sql>
+
+    <!-- 插入视频 -->
+    <insert id="insert" parameterType="com.kilikili.entity.po.Video">
+        INSERT INTO kilikili_video (
+            video_id, user_id, video_name, video_cover, category_id, p_category_id,
+            post_type, tags, introduction, interaction, duration, play_count, like_count,
+            coin_count, collect_count, comment_count, danmu_count, share_count, status,
+            recommend_type, audit_reason, last_play_time, is_deleted, create_time
+        ) VALUES (
+            #{videoId}, #{userId}, #{videoName}, #{videoCover}, #{categoryId}, #{pCategoryId},
+            #{postType}, #{tags}, #{introduction}, #{interaction}, #{duration}, #{playCount}, #{likeCount},
+            #{coinCount}, #{collectCount}, #{commentCount}, #{danmuCount}, #{shareCount}, #{status},
+            #{recommendType}, #{auditReason}, #{lastPlayTime}, 0, NOW()
+        )
+    </insert>
+
+    <!-- 根据视频ID删除(逻辑删除) -->
+    <update id="deleteByVideoId">
+        UPDATE kilikili_video SET is_deleted = 1 WHERE video_id = #{videoId}
+    </update>
+
+    <!-- 根据视频ID更新 -->
+    <update id="updateByVideoId" parameterType="com.kilikili.entity.po.Video">
+        UPDATE kilikili_video
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="videoName != null">video_name = #{videoName},</if>
+            <if test="videoCover != null">video_cover = #{videoCover},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="pCategoryId != null">p_category_id = #{pCategoryId},</if>
+            <if test="postType != null">post_type = #{postType},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+            <if test="interaction != null">interaction = #{interaction},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="playCount != null">play_count = #{playCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="coinCount != null">coin_count = #{coinCount},</if>
+            <if test="collectCount != null">collect_count = #{collectCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="danmuCount != null">danmu_count = #{danmuCount},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="recommendType != null">recommend_type = #{recommendType},</if>
+            <if test="auditReason != null">audit_reason = #{auditReason},</if>
+            <if test="lastPlayTime != null">last_play_time = #{lastPlayTime},</if>
+        </set>
+        WHERE video_id = #{videoId}
+    </update>
+
+    <!-- 更新计数器（自增/自减） -->
+    <update id="updateCount">
+        UPDATE kilikili_video
+        <set>
+            <if test="field != null and field != ''">
+                ${field} = ${field} + #{count},
+            </if>
+        </set>
+        WHERE video_id = #{videoId}
+    </update>
+
+    <!-- 根据视频ID查询 -->
+    <select id="selectByVideoId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video
+        WHERE video_id = #{videoId} AND (is_deleted IS NULL OR is_deleted = 0)
+    </select>
+
+    <!-- 根据视频ID查询(包含已删除) -->
+    <select id="selectByVideoIdIncludeDeleted" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video
+        WHERE video_id = #{videoId}
+    </select>
+
+    <!-- 查询所有视频 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video
+        WHERE (is_deleted IS NULL OR is_deleted = 0)
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 动态WHERE条件 -->
+    <sql id="Where_Condition">
+        <where>
+            AND (is_deleted IS NULL OR is_deleted = 0)
+            <if test="query.videoId != null and query.videoId != ''">AND video_id = #{query.videoId}</if>
+            <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
+            <if test="query.videoNameFuzzy != null and query.videoNameFuzzy != ''">AND video_name LIKE CONCAT('%', #{query.videoNameFuzzy}, '%')</if>
+            <if test="query.categoryId != null">AND category_id = #{query.categoryId}</if>
+            <if test="query.pCategoryId != null">AND p_category_id = #{query.pCategoryId}</if>
+            <if test="query.status != null">AND status = #{query.status}</if>
+            <if test="query.recommendType != null">AND recommend_type = #{query.recommendType}</if>
+            <if test="query.createTimeStart != null">AND create_time &gt;= #{query.createTimeStart}</if>
+            <if test="query.createTimeEnd != null">AND create_time &lt;= #{query.createTimeEnd}</if>
+            <if test="query.keyword != null and query.keyword != ''">
+                AND (video_name LIKE CONCAT('%', #{query.keyword}, '%')
+                OR tags LIKE CONCAT('%', #{query.keyword}, '%')
+                OR introduction LIKE CONCAT('%', #{query.keyword}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <!-- 根据条件查询列表 -->
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_video
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY create_time DESC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <!-- 根据条件查询数量 -->
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_video
+        <include refid="Where_Condition"/>
+    </select>
+
+</mapper>
