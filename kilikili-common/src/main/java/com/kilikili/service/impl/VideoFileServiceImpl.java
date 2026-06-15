@@ -4,10 +4,12 @@ import com.aliyun.oss.OSS;
 import com.kilikili.config.OssConfig;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.UploadRecord;
+import com.kilikili.entity.po.Video;
 import com.kilikili.entity.po.VideoFile;
 import com.kilikili.entity.query.VideoFileQuery;
 import com.kilikili.mappers.UploadRecordMapper;
 import com.kilikili.mappers.VideoFileMapper;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoFileService;
 import com.kilikili.utils.StringTools;
@@ -28,6 +30,8 @@ public class VideoFileServiceImpl implements VideoFileService {
     @Resource
     private VideoFileMapper videoFileMapper;
     @Resource
+    private VideoMapper videoMapper;
+    @Resource
     private UploadRecordMapper uploadRecordMapper;
     @Resource
     private RedisUtils<Object> redisUtils;
@@ -41,12 +45,13 @@ public class VideoFileServiceImpl implements VideoFileService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> preUploadVideo(String fileName, Integer chunks) {
+    public Map<String, Object> preUploadVideo(String fileName, Integer chunks, String userId) {
         String uploadId = UUID.randomUUID().toString();
 
         // Create upload record
         UploadRecord record = new UploadRecord();
         record.setUploadId(uploadId);
+        record.setUserId(userId);
         record.setFileName(fileName);
         record.setChunkCount(chunks);
         record.setUploadedChunks(0);
@@ -76,7 +81,7 @@ public class VideoFileServiceImpl implements VideoFileService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String uploadVideo(String chunkFile, Integer chunkIndex, String uploadId) {
+    public Map<String, Object> uploadVideo(String chunkFile, Integer chunkIndex, String uploadId) {
         UploadRecord record = uploadRecordMapper.selectByUploadId(uploadId);
         if (record == null) {
             throw new RuntimeException("上传记录不存在");
@@ -108,20 +113,24 @@ public class VideoFileServiceImpl implements VideoFileService {
         record.setUploadedChunks(record.getUploadedChunks() + 1);
         uploadRecordMapper.updateByUploadId(record);
 
-        // When all chunks are done, merge and create VideoFile record
+        // When all chunks are done, merge and create VideoFile + Video records
         if (record.getUploadedChunks() >= record.getChunkCount()) {
             record.setStatus(1);
             uploadRecordMapper.updateByUploadId(record);
             return mergeAndCreateVideoFile(record);
         }
-        return null;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("fileId", null);
+        result.put("videoId", null);
+        return result;
     }
 
     /**
-     * Merge all chunk files and create a VideoFile record
-     * @return 生成的 fileId
+     * Merge all chunk files, create VideoFile and draft Video records
+     * @return Map containing fileId and videoId
      */
-    private String mergeAndCreateVideoFile(UploadRecord record) {
+    private Map<String, Object> mergeAndCreateVideoFile(UploadRecord record) {
         File tempDir = new File(TEMP_FOLDER + record.getUploadId());
         File mergedFile = new File(TEMP_FOLDER + record.getUploadId() + "_merged");
 
@@ -168,10 +177,31 @@ public class VideoFileServiceImpl implements VideoFileService {
         videoFile.setCreateTime(new Date());
         videoFileMapper.insert(videoFile);
 
+        // Also create a draft Video record (use same ID as fileId)
+        String videoId = fileId;
+        Video video = new Video();
+        video.setVideoId(videoId);
+        video.setUserId(record.getUserId());
+        video.setVideoName(record.getFileName());
+        video.setDuration(0);
+        video.setStatus(0); // draft status
+        video.setPlayCount(0);
+        video.setLikeCount(0);
+        video.setCoinCount(0);
+        video.setCollectCount(0);
+        video.setCommentCount(0);
+        video.setDanmuCount(0);
+        video.setShareCount(0);
+        video.setCreateTime(new Date());
+        videoMapper.insert(video);
+
         // Cleanup temp files
         cleanupLocalFiles(tempDir, mergedFile);
 
-        return fileId;
+        Map<String, Object> result = new HashMap<>();
+        result.put("fileId", fileId);
+        result.put("videoId", videoId);
+        return result;
     }
 
     private void cleanupLocalFiles(File tempDir, File mergedFile) {

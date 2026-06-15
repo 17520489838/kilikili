@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -35,17 +36,20 @@ public class CategoryServiceImpl implements CategoryService {
         if (cachedList != null && !cachedList.isEmpty()) {
             return cachedList;
         }
-        // Query from DB (selectList already filters is_deleted=0 and orders by sort ASC)
+        // Query from DB (selectList already filters is_deleted=0)
         List<Category> list = categoryMapper.selectList();
+        // Sort: parent categories (pCategoryId=0) first, then by sort ASC
+        if (list != null && !list.isEmpty()) {
+            list.sort(Comparator.comparingInt((Category c) ->
+                            c.getPCategoryId() != null && c.getPCategoryId() == 0 ? 0 : 1)
+                    .thenComparingInt(c -> c.getSort() != null ? c.getSort() : 0));
+        }
         // Cache in Redis for 1 hour
         if (list != null && !list.isEmpty()) {
             redisUtils.setex(REDIS_KEY_CATEGORY_LIST, (Object) list, 3600000L);
         }
         return list;
     }
-
-
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)

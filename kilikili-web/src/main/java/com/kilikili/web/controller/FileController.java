@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.File;
+import java.util.Map;
 
 @RestController("webFileController")
 @RequestMapping("/file")
@@ -27,23 +28,27 @@ public class FileController extends ABaseController {
 
     @RequestMapping("/preUploadVideo")
     public ResponseVO preUploadVideo(@NotEmpty String fileName, Integer chunks) {
-        return getSuccessResponseVO(videoFileService.preUploadVideo(fileName, chunks));
-    }
-
-    @PostMapping("/uploadVideo")
-    public ResponseVO uploadVideo(@RequestParam("chunkFile") MultipartFile chunkFile,
-                                  @RequestParam("chunkIndex") @NotEmpty String chunkIndex) throws Exception {
         String token = getTokenFromCookie();
         TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
         if (tokenUserInfoDto == null) {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
-        String userId = tokenUserInfoDto.getUserId();
-        
+        return getSuccessResponseVO(videoFileService.preUploadVideo(fileName, chunks, tokenUserInfoDto.getUserId()));
+    }
+
+    @PostMapping("/uploadVideo")
+    public ResponseVO uploadVideo(@RequestParam("chunkFile") MultipartFile chunkFile,
+                                  @RequestParam("chunkIndex") @NotEmpty String chunkIndex,
+                                  @RequestParam("uploadId") @NotEmpty String uploadId) throws Exception {
+        String token = getTokenFromCookie();
+        TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+        if (tokenUserInfoDto == null) {
+            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+        }
         File tempFile = File.createTempFile("chunk_", chunkFile.getOriginalFilename());
         chunkFile.transferTo(tempFile);
-        String fileId = videoFileService.uploadVideo(tempFile.getAbsolutePath(), Integer.parseInt(chunkIndex), userId);
-        return getSuccessResponseVO(fileId);
+        Map<String, Object> result = videoFileService.uploadVideo(tempFile.getAbsolutePath(), Integer.parseInt(chunkIndex), uploadId);
+        return getSuccessResponseVO(result);
     }
 
     @RequestMapping("/delUploadVideo")

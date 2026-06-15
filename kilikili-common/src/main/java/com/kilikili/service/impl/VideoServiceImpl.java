@@ -254,6 +254,13 @@ public class VideoServiceImpl implements VideoService {
     public Video getVideoByVideoIdForUser(String videoId, String userId) {
         Video video = videoMapper.selectByVideoId(videoId);
         if (video == null) {
+            // 前端可能传的是 uploadId(UUID), 尝试通过 uploadId 找到 VideoFile 再转 videoId
+            VideoFile videoFile = videoFileMapper.selectByUploadId(videoId);
+            if (videoFile != null && videoFile.getFileId() != null) {
+                video = videoMapper.selectByVideoId(videoFile.getFileId());
+            }
+        }
+        if (video == null) {
             throw new BusinessException("视频不存在");
         }
         if (!Objects.equals(video.getUserId(), userId)) {

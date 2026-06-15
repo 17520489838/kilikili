@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface VideoFileService {
-    Map<String, Object> preUploadVideo(String fileName, Integer chunks);
-    String uploadVideo(String chunkFile, Integer chunkIndex, String uploadId);
+    Map<String, Object> preUploadVideo(String fileName, Integer chunks, String userId);
+    Map<String, Object> uploadVideo(String chunkFile, Integer chunkIndex, String uploadId);
     void delUploadVideo(String uploadId);
     String uploadImage(String file, Boolean createThumbnail);
     VideoFile getVideoFileByFileId(String fileId);
