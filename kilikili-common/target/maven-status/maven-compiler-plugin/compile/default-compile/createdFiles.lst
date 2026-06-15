@@ -1,4 +1,5 @@
 com\kilikili\service\MessageService.class
+com\kilikili\entity\vo\CategoryVO.class
 com\kilikili\service\impl\SysSettingServiceImpl.class
 com\kilikili\entity\query\UploadRecordQuery.class
 com\kilikili\service\UserCollectionService.class

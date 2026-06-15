@@ -16,8 +16,19 @@ public class CategoryController extends ABaseController {
     @Resource
     private CategoryService categoryService;
 
+    /**
+     * 加载所有分类（树形结构，父分类包含子分类）
+     */
     @RequestMapping("/loadAllCategory")
     public ResponseVO loadAllCategory() {
         return getSuccessResponseVO(categoryService.loadAllCategory());
+    }
+
+    /**
+     * 加载所有父分类（仅父分类，用于前端父分类选择器）
+     */
+    @RequestMapping("/loadAllParentCategory")
+    public ResponseVO loadAllParentCategory() {
+        return getSuccessResponseVO(categoryService.loadAllParentCategory());
     }
 }

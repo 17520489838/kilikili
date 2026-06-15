@@ -11,6 +11,7 @@ import java.util.List;
 public interface CategoryMapper {
     Integer insert(Category category);
     Integer deleteByCategoryId(@Param("categoryId") Integer categoryId);
+    Integer deleteByPCategoryId(@Param("pCategoryId") Integer pCategoryId);
     Integer updateByCategoryId(Category category);
     Category selectByCategoryId(@Param("categoryId") Integer categoryId);
     List<Category> selectList();

@@ -12,6 +12,7 @@ public interface VideoFileService {
     void delUploadVideo(String uploadId);
     String uploadImage(String file, Boolean createThumbnail);
     VideoFile getVideoFileByFileId(String fileId);
+    VideoFile getVideoFileByUploadId(String uploadId);
     List<VideoFile> getVideoFileList(VideoFileQuery query);
     void saveVideoFile(VideoFile videoFile);
 }

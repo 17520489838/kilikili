@@ -281,6 +281,11 @@ public class VideoFileServiceImpl implements VideoFileService {
     }
 
     @Override
+    public VideoFile getVideoFileByUploadId(String uploadId) {
+        return videoFileMapper.selectByUploadId(uploadId);
+    }
+
+    @Override
     public List<VideoFile> getVideoFileList(VideoFileQuery query) {
         return videoFileMapper.selectListByCondition(query);
     }

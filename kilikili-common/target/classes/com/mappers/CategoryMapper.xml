@@ -33,11 +33,19 @@
         )
     </insert>
 
-    <!-- 根据分类ID删除 -->
-    <delete  id="deleteByCategoryId">
-        DELETE FROM kilikili_category
+    <!-- 根据分类ID删除（软删除） -->
+    <update id="deleteByCategoryId">
+        UPDATE kilikili_category
+        SET is_deleted = 1
         WHERE category_id = #{categoryId}
-    </delete>
+    </update>
+
+    <!-- 根据父分类ID批量删除子分类（软删除） -->
+    <update id="deleteByPCategoryId">
+        UPDATE kilikili_category
+        SET is_deleted = 1
+        WHERE p_category_id = #{pCategoryId}
+    </update>
 
     <!-- 根据分类ID更新 -->
     <update id="updateByCategoryId" parameterType="com.kilikili.entity.po.Category">
@@ -71,6 +79,7 @@
     <!-- 动态WHERE条件 -->
     <sql id="Where_Condition">
         <where>
+            AND is_deleted = 0
             <if test="query.categoryId != null">AND category_id = #{query.categoryId}</if>
             <if test="query.pCategoryId != null">AND p_category_id = #{query.pCategoryId}</if>
             <if test="query.categoryCode != null and query.categoryCode != ''">AND category_code = #{query.categoryCode}</if>

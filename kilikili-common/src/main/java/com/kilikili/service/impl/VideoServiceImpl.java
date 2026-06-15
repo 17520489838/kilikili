@@ -144,12 +144,12 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String postVideo(TokenUserInfoDto token, String videoCover, String videoName,
+    public String postVideo(TokenUserInfoDto token, String videoId, String videoCover, String videoName,
                           Integer pCategoryId, Integer categoryId, Integer postType,
                           String tags, String introduction, String interaction,
                           String uploadFileList) {
         try {
-            return doPostVideo(token, videoCover, videoName, pCategoryId, categoryId, postType,
+            return doPostVideo(token, videoId, videoCover, videoName, pCategoryId, categoryId, postType,
                     tags, introduction, interaction, uploadFileList);
         } catch (Exception e) {
             logger.error("postVideo 异常: videoName={}, uploadFileList={}, userId={}",
@@ -158,18 +158,40 @@ public class VideoServiceImpl implements VideoService {
         }
     }
 
-    private String doPostVideo(TokenUserInfoDto token, String videoCover, String videoName,
+    private String doPostVideo(TokenUserInfoDto token, String videoId, String videoCover, String videoName,
                              Integer pCategoryId, Integer categoryId, Integer postType,
                              String tags, String introduction, String interaction,
                              String uploadFileList) {
+        // 更新模式：传入 videoId 时，跳过文件处理和 VideoP 重建，只更新元数据
+        if (videoId != null && !videoId.isEmpty()) {
+            Video existVideo = videoMapper.selectByVideoIdIncludeDeleted(videoId);
+            if (existVideo == null) {
+                throw new BusinessException("视频不存在");
+            }
+            if (!Objects.equals(existVideo.getUserId(), token.getUserId())) {
+                throw new BusinessException("无权操作该视频");
+            }
+            existVideo.setVideoCover(videoCover);
+            existVideo.setVideoName(videoName);
+            existVideo.setPCategoryId(pCategoryId);
+            existVideo.setCategoryId(categoryId);
+            existVideo.setPostType(postType);
+            existVideo.setTags(tags);
+            existVideo.setIntroduction(introduction);
+            existVideo.setInteraction(interaction);
+            videoMapper.updateByVideoId(existVideo);
+            return videoId;
+        }
+
+        // 创建模式：原逻辑不变
         // Parse uploadFileList as JSON array of {pName, fileId}
         JSONArray fileArray = JSONArray.parseArray(uploadFileList);
         if (fileArray == null || fileArray.isEmpty()) {
             throw new BusinessException("上传文件列表不能为空");
         }
 
-        // Generate video ID
-        String videoId = StringTools.getRandomNumber(Constants.LENGTH_10);
+        // 生成新的 videoId（覆盖方法参数，创建模式时参数值为 null）
+        videoId = StringTools.getRandomNumber(Constants.LENGTH_10);
         int totalDuration = 0;
 
         // Create VideoP records for each file, update VideoFile userId

@@ -12,7 +12,7 @@ public class BaseParma implements Serializable {
     private Integer pageNo = 1;
     
     // 每页大小
-    private Integer pageSize = 10;
+    private Integer pageSize = 20;
     
     // 排序字段
     private String orderBy;
