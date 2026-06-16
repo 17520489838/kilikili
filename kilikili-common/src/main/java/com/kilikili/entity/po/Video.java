@@ -18,6 +18,9 @@ public class Video implements Serializable {
     
     // 用户名（非数据库字段，用于展示上传者昵称）
     private String userName;
+
+    // 文件ID（非数据库字段，用于前端获取视频资源）
+    private String fileId;
     private String videoName;
     private String videoCover;
     private Integer categoryId;

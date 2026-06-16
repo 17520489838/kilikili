@@ -4,37 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="成功实现文件上传功能,用户端和后台都能查询到上传视频">
+    <list default="true" id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/94ef9543-b2b7-4117-b579-753ed75fe11f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-admin/src/main/java/com/kilikili/admin/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-admin/target/classes/com/kilikili/admin/controller/CategoryController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/BaseParma.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/query/BaseParma.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/CategoryMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/CategoryMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/CategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoFileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoFileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/VideoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/CategoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Video.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoFileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoFileServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/CategoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/CategoryMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/BaseParma.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/query/BaseParma.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/CategoryMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/CategoryMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/CategoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/CategoryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/utils/FFmpegUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/utils/FFmpegUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/mappers/VideoMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoFileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoFileService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/VideoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/CategoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/CategoryServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoFileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoFileServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/CategoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/mappers/CategoryMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UcenterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UcenterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/CategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UcenterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UcenterController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/FileController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/FileController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,8 +188,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.kilikiliWebRunApplication" />
         <item itemvalue="Spring Boot.kilikiliadminRunApplication" />
+        <item itemvalue="Spring Boot.kilikiliWebRunApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -249,7 +236,8 @@
       <workItem from="1781415792189" duration="11897000" />
       <workItem from="1781482679472" duration="11976000" />
       <workItem from="1781520267469" duration="2830000" />
-      <workItem from="1781523130897" duration="3324000" />
+      <workItem from="1781523130897" duration="3973000" />
+      <workItem from="1781585387528" duration="8591000" />
     </task>
     <task id="LOCAL-00001" summary="实现登录注册功能">
       <option name="closed" value="true" />
@@ -299,7 +287,23 @@
       <option name="project" value="LOCAL" />
       <updated>1781494153370</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!">
+      <option name="closed" value="true" />
+      <created>1781526788500</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1781526788500</updated>
+    </task>
+    <task id="LOCAL-00008" summary="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!">
+      <option name="closed" value="true" />
+      <created>1781526805367</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1781526805367</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -321,7 +325,8 @@
     <MESSAGE value="全功能基本实现,但文件上传功能仍然存在较大问题,后续修复" />
     <MESSAGE value="修复并优化分类管理及用户端分类展示" />
     <MESSAGE value="成功实现文件上传功能,用户端和后台都能查询到上传视频" />
-    <option name="LAST_COMMIT_MESSAGE" value="成功实现文件上传功能,用户端和后台都能查询到上传视频" />
+    <MESSAGE value="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

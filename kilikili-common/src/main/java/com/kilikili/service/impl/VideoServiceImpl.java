@@ -11,6 +11,7 @@ import com.kilikili.entity.po.Video;
 import com.kilikili.entity.po.VideoFile;
 import com.kilikili.entity.po.VideoP;
 import com.kilikili.entity.query.SimplePage;
+import com.kilikili.entity.query.VideoPQuery;
 import com.kilikili.entity.query.VideoQuery;
 import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.exception.BusinessException;
@@ -78,6 +79,13 @@ public class VideoServiceImpl implements VideoService {
             UserInfo userInfo = userInfoMapper.selectByUserId(video.getUserId());
             if (userInfo != null) {
                 video.setUserName(userInfo.getNickName());
+            }
+            // Get fileId from VideoP for this video
+            VideoPQuery vpQuery = new VideoPQuery();
+            vpQuery.setVideoId(videoId);
+            List<VideoP> vpList = videoPMapper.selectListByCondition(vpQuery);
+            if (vpList != null && !vpList.isEmpty()) {
+                video.setFileId(vpList.get(0).getFileId());
             }
         }
         return video;
@@ -183,9 +191,24 @@ public class VideoServiceImpl implements VideoService {
             return videoId;
         }
 
-        // 创建模式：原逻辑不变
-        // Parse uploadFileList as JSON array of {pName, fileId}
-        JSONArray fileArray = JSONArray.parseArray(uploadFileList);
+        // 创建模式：解析 uploadFileList（JSON 数组或 uploadId）
+        JSONArray fileArray = null;
+        try {
+            fileArray = JSONArray.parseArray(uploadFileList);
+        } catch (Exception ignored) {}
+
+        // 如果不是 JSON 数组，尝试当作 uploadId 查询
+        if (fileArray == null || fileArray.isEmpty()) {
+            VideoFile vf = videoFileMapper.selectByUploadId(uploadFileList);
+            if (vf != null) {
+                fileArray = new JSONArray();
+                JSONObject obj = new JSONObject();
+                obj.put("pName", vf.getFileName() != null ? vf.getFileName() : "default");
+                obj.put("fileId", vf.getFileId());
+                fileArray.add(obj);
+            }
+        }
+
         if (fileArray == null || fileArray.isEmpty()) {
             throw new BusinessException("上传文件列表不能为空");
         }

@@ -26,6 +26,7 @@ D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\po\SeriesVideo.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\impl\VideoFileServiceImpl.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\utils\FFmpegUtils.java
+D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\VideoTranscodeService.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\vo\CategoryVO.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\query\VideoQuery.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\enums\MessageTypeEnum.java
@@ -84,6 +85,7 @@ D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\entity\
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\mappers\UserFocusMapper.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\impl\UserActionServiceImpl.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\VideoSeriesService.java
+D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\impl\VideoTranscodeServiceImpl.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\impl\MessageServiceImpl.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\websocket\MessageWebSocket.java
 D:\kilikili-all\kilikili-java\kilikili-common\src\main\java\com\kilikili\service\CommentService.java

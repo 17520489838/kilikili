@@ -1,6 +1,7 @@
 package com.kilikili.service.impl;
 
 import com.aliyun.oss.OSS;
+import com.kilikili.config.Appconfig;
 import com.kilikili.config.OssConfig;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.UploadRecord;
@@ -12,6 +13,7 @@ import com.kilikili.mappers.VideoFileMapper;
 import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoFileService;
+import com.kilikili.service.VideoTranscodeService;
 import com.kilikili.utils.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 @Service("videoFileService")
@@ -39,6 +42,12 @@ public class VideoFileServiceImpl implements VideoFileService {
     private OSS ossClient;
     @Resource
     private OssConfig ossConfig;
+
+    @Resource
+    private VideoTranscodeService videoTranscodeService;
+
+    @Resource
+    private Appconfig appconfig;
 
     // Temporary folder for chunk uploads
     private static final String TEMP_FOLDER = System.getProperty("java.io.tmpdir") + "/kilikili/upload/";
@@ -153,24 +162,25 @@ public class VideoFileServiceImpl implements VideoFileService {
             throw new RuntimeException("合并文件失败", e);
         }
 
-        // Upload merged file to OSS
         String fileId = StringTools.getRandomNumber(Constants.LENGTH_10);
+        String filePath;
+
+        // Upload merged file to OSS (非致命，失败则使用本地路径)
         String objectKey = "video/" + fileId + "/" + record.getFileName();
         try (FileInputStream fis = new FileInputStream(mergedFile)) {
             ossClient.putObject(ossConfig.getBucketName(), objectKey, fis);
+            filePath = "https://" + ossConfig.getBucketName() + "." + ossConfig.getEndpoint() + "/" + objectKey;
             logger.info("视频文件上传至OSS成功: {}/{}", ossConfig.getBucketName(), objectKey);
-        } catch (IOException e) {
-            throw new RuntimeException("上传视频到OSS失败", e);
+        } catch (Exception e) {
+            logger.warn("OSS上传失败(将使用本地路径): {}", e.getMessage());
+            filePath = "local:" + mergedFile.getAbsolutePath();
         }
-
-        // Generate OSS URL
-        String ossUrl = "https://" + ossConfig.getBucketName() + "." + ossConfig.getEndpoint() + "/" + objectKey;
 
         // Create VideoFile record
         VideoFile videoFile = new VideoFile();
         videoFile.setFileId(fileId);
         videoFile.setFileName(record.getFileName());
-        videoFile.setFilePath(ossUrl);
+        videoFile.setFilePath(filePath);
         videoFile.setFileSize(mergedFile.length());
         videoFile.setUploadId(record.getUploadId());
         videoFile.setStatus(1); // upload complete
@@ -195,8 +205,21 @@ public class VideoFileServiceImpl implements VideoFileService {
         video.setCreateTime(new Date());
         videoMapper.insert(video);
 
-        // Cleanup temp files
-        cleanupLocalFiles(tempDir, mergedFile);
+        // Move merged file to permanent location (supports cross-drive via NIO)
+        String originalVideoDir = getOriginalVideoDir(fileId);
+        new File(originalVideoDir).mkdirs();
+        File permanentFile = new File(originalVideoDir, record.getFileName());
+        try {
+            Files.move(mergedFile.toPath(), permanentFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("移动合并文件到永久目录失败", e);
+        }
+
+        // Cleanup temp chunk directory only
+        cleanupChunkDir(tempDir);
+
+        // Trigger async transcoding
+        videoTranscodeService.startTranscode(fileId, permanentFile.getAbsolutePath());
 
         Map<String, Object> result = new HashMap<>();
         result.put("fileId", fileId);
@@ -204,7 +227,11 @@ public class VideoFileServiceImpl implements VideoFileService {
         return result;
     }
 
-    private void cleanupLocalFiles(File tempDir, File mergedFile) {
+    private String getOriginalVideoDir(String fileId) {
+        return appconfig.getProjectFolder() + "video/original/" + fileId + "/";
+    }
+
+    private void cleanupChunkDir(File tempDir) {
         if (tempDir.exists()) {
             File[] chunks = tempDir.listFiles();
             if (chunks != null) {
@@ -213,9 +240,6 @@ public class VideoFileServiceImpl implements VideoFileService {
                 }
             }
             tempDir.delete();
-        }
-        if (mergedFile.exists()) {
-            mergedFile.delete();
         }
     }
 

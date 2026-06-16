@@ -3,8 +3,8 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 15MB
+      max-file-size: 100MB
+      max-request-size: 150MB
   application:
     name: kilikili-web
   datasource:
@@ -41,6 +41,8 @@ mybatis:
 
 project:
   folder: d:/webser/kilikili/
+ffmpeg:
+  path: C:/Program Files (x86)/ACLOS/Cross/recorder-release/ffmpeg.exe
 log:
   root:
     level: debug

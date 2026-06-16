@@ -7,6 +7,7 @@ com\kilikili\web\controller\AGlobalExceptionHandlerController.class
 com\kilikili\web\controller\HistoryController.class
 com\kilikili\web\controller\SeriesController.class
 com\kilikili\web\controller\SysSettingController.class
+com\kilikili\web\config\FfmpegConfig.class
 com\kilikili\web\controller\CommentController.class
 com\kilikili\web\controller\AccountInfoController.class
 com\kilikili\web\controller\AccountController.class

@@ -33,6 +33,7 @@ com\kilikili\service\impl\DanmuServiceImpl.class
 com\kilikili\entity\enums\DateTimePatternEnum.class
 com\kilikili\entity\po\VideoSeries.class
 com\kilikili\entity\query\SysSettingQuery.class
+com\kilikili\service\impl\VideoTranscodeServiceImpl.class
 com\kilikili\entity\vo\ResponseVO.class
 com\kilikili\entity\enums\SexEnum.class
 com\kilikili\entity\po\Message.class
@@ -67,6 +68,7 @@ com\kilikili\entity\vo\geterrorResponseVO.class
 com\kilikili\service\CommentService.class
 com\kilikili\config\ScheduleConfig.class
 com\kilikili\entity\query\VideoFileQuery.class
+com\kilikili\service\VideoTranscodeService.class
 com\kilikili\entity\constants\Constants.class
 com\kilikili\entity\enums\VideoStatusEnum.class
 com\kilikili\entity\query\VideoPQuery.class
@@ -92,6 +94,7 @@ com\kilikili\entity\query\UserFocusQuery.class
 com\kilikili\entity\dto\TokenUserInfoDto.class
 com\kilikili\entity\enums\UserActionTypeEnum.class
 com\kilikili\entity\po\UserFocus.class
+com\kilikili\utils\FFmpegUtils$FfmpegResult.class
 com\kilikili\entity\enums\CommentStatusEnum.class
 com\kilikili\service\impl\UserFocusServiceImpl.class
 com\kilikili\config\ThreadPoolConfig.class
