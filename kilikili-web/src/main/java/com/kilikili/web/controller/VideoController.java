@@ -57,6 +57,7 @@ public class VideoController extends ABaseController {
         VideoQuery query = new VideoQuery();
         query.setPCategoryId(pCategoryId);
         query.setCategoryId(categoryId);
+        query.setStatus(3); // only show published videos
         query.setPageNo(pageNo);
         PaginationResultVO<Video> result = videoService.loadVideoPage(query);
         return getSuccessResponseVO(result);
@@ -105,6 +106,7 @@ public class VideoController extends ABaseController {
 
         VideoQuery query = new VideoQuery();
         query.setKeyword(keyword);
+        query.setStatus(3); // only search published videos
         query.setPageNo(pageNo);
         PaginationResultVO<Video> result = videoService.loadVideoPage(query);
         return getSuccessResponseVO(result);

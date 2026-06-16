@@ -5,12 +5,10 @@ import com.kilikili.config.Appconfig;
 import com.kilikili.config.OssConfig;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.UploadRecord;
-import com.kilikili.entity.po.Video;
 import com.kilikili.entity.po.VideoFile;
 import com.kilikili.entity.query.VideoFileQuery;
 import com.kilikili.mappers.UploadRecordMapper;
 import com.kilikili.mappers.VideoFileMapper;
-import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoFileService;
 import com.kilikili.service.VideoTranscodeService;
@@ -32,8 +30,6 @@ public class VideoFileServiceImpl implements VideoFileService {
 
     @Resource
     private VideoFileMapper videoFileMapper;
-    @Resource
-    private VideoMapper videoMapper;
     @Resource
     private UploadRecordMapper uploadRecordMapper;
     @Resource
@@ -122,7 +118,7 @@ public class VideoFileServiceImpl implements VideoFileService {
         record.setUploadedChunks(record.getUploadedChunks() + 1);
         uploadRecordMapper.updateByUploadId(record);
 
-        // When all chunks are done, merge and create VideoFile + Video records
+        // When all chunks are done, merge and create VideoFile record
         if (record.getUploadedChunks() >= record.getChunkCount()) {
             record.setStatus(1);
             uploadRecordMapper.updateByUploadId(record);
@@ -136,8 +132,8 @@ public class VideoFileServiceImpl implements VideoFileService {
     }
 
     /**
-     * Merge all chunk files, create VideoFile and draft Video records
-     * @return Map containing fileId and videoId
+     * Merge all chunk files and create VideoFile record
+     * @return Map containing fileId
      */
     private Map<String, Object> mergeAndCreateVideoFile(UploadRecord record) {
         File tempDir = new File(TEMP_FOLDER + record.getUploadId());
@@ -187,24 +183,6 @@ public class VideoFileServiceImpl implements VideoFileService {
         videoFile.setCreateTime(new Date());
         videoFileMapper.insert(videoFile);
 
-        // Also create a draft Video record (use same ID as fileId)
-        String videoId = fileId;
-        Video video = new Video();
-        video.setVideoId(videoId);
-        video.setUserId(record.getUserId());
-        video.setVideoName(record.getFileName());
-        video.setDuration(0);
-        video.setStatus(0); // draft status
-        video.setPlayCount(0);
-        video.setLikeCount(0);
-        video.setCoinCount(0);
-        video.setCollectCount(0);
-        video.setCommentCount(0);
-        video.setDanmuCount(0);
-        video.setShareCount(0);
-        video.setCreateTime(new Date());
-        videoMapper.insert(video);
-
         // Move merged file to permanent location (supports cross-drive via NIO)
         String originalVideoDir = getOriginalVideoDir(fileId);
         new File(originalVideoDir).mkdirs();
@@ -223,7 +201,6 @@ public class VideoFileServiceImpl implements VideoFileService {
 
         Map<String, Object> result = new HashMap<>();
         result.put("fileId", fileId);
-        result.put("videoId", videoId);
         return result;
     }
 
