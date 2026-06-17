@@ -66,6 +66,40 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 根据用户、视频和行为类型查询 -->
+    <select id="selectByUserVideoAction" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_action
+        WHERE user_id = #{userId}
+          AND video_id = #{videoId}
+          AND action_type = #{actionType}
+          AND is_deleted = 0
+        LIMIT 1
+    </select>
+
+    <!-- 根据用户、视频和行为类型更新（用于逻辑删除） -->
+    <update id="updateByUserVideoAction" parameterType="com.kilikili.entity.po.UserAction">
+        UPDATE kilikili_user_action
+        <set>
+            <if test="commentId != null">comment_id = #{commentId},</if>
+            <if test="actionCount != null">action_count = #{actionCount},</if>
+            <if test="lastActionTime != null">last_action_time = #{lastActionTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE user_id = #{userId} AND video_id = #{videoId} AND action_type = #{actionType}
+    </update>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO kilikili_user_action (
+            user_id, video_id, comment_id, action_type, action_count, last_action_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.videoId}, #{item.commentId}, #{item.actionType}, #{item.actionCount}, #{item.lastActionTime})
+        </foreach>
+    </insert>
+
     <!-- 动态WHERE条件 -->
     <sql id="Where_Condition">
         <where>

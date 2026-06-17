@@ -292,6 +292,14 @@ public class VideoServiceImpl implements VideoService {
         SimplePage simplePage = new SimplePage(pageNum, pageSize, totalCount);
 
         List<Video> list = videoMapper.selectListByCondition(query);
+        // Enrich with user info for frontend display
+        UserInfo user = userInfoMapper.selectByUserId(userId);
+        if (user != null) {
+            for (Video v : list) {
+                v.setUserName(user.getNickName());
+                v.setAvatar(user.getAvatar());
+            }
+        }
         return new PaginationResultVO<>(simplePage, list);
     }
 

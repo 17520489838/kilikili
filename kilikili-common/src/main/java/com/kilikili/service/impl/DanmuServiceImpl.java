@@ -5,6 +5,7 @@ import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.po.Danmu;
 import com.kilikili.entity.query.DanmuQuery;
 import com.kilikili.mappers.DanmuMapper;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.DanmuService;
 import com.kilikili.utils.StringTools;
@@ -22,6 +23,8 @@ public class DanmuServiceImpl implements DanmuService {
 
     @Resource
     private DanmuMapper danmuMapper;
+    @Resource
+    private VideoMapper videoMapper;
     @Resource
     private RedisUtils<Object> redisUtils;
 
@@ -43,6 +46,9 @@ public class DanmuServiceImpl implements DanmuService {
         danmu.setFontSize(25);
         danmu.setCreateTime(new Date());
         danmuMapper.insert(danmu);
+
+        // Increment danmu count on the video
+        videoMapper.updateCount(videoId, "danmu_count", 1);
 
         // Clear cache so it gets refreshed on next load
         String cacheKey = REDIS_KEY_DANMU + fileId + "_" + videoId;

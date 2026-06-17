@@ -1,7 +1,6 @@
 package com.kilikili.web.controller;
 
 import com.kilikili.component.RedisComponent;
-import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
 import com.kilikili.entity.po.Video;
@@ -11,6 +10,7 @@ import com.kilikili.entity.query.VideoQuery;
 import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.mappers.VideoPMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoService;
@@ -29,7 +29,6 @@ import java.util.List;
 @Validated
 public class VideoController extends ABaseController {
 
-    private static final String REDIS_KEY_VIDEO_PLAY_COUNT = "kilikili:video:playCount:";
     private static final String REDIS_KEY_VIDEO_ONLINE = "kilikili:video:online:";
     private static final String REDIS_KEY_SEARCH_HOT = "kilikili:search:hot";
 
@@ -38,6 +37,9 @@ public class VideoController extends ABaseController {
 
     @Resource
     private VideoPMapper videoPMapper;
+
+    @Resource
+    private VideoMapper videoMapper;
 
     @Resource
     private RedisUtils redisUtils;
@@ -69,8 +71,8 @@ public class VideoController extends ABaseController {
         if (video == null) {
             throw new BusinessException(ResponseCodeEnum.NOT_FOUND);
         }
-        // Increment play count in Redis
-        redisUtils.incrementex(REDIS_KEY_VIDEO_PLAY_COUNT + videoId, Constants.REDIS_KEY_EXPIRES_ONE_DAY);
+        // Increment play count in database
+        videoMapper.updateCount(videoId, "play_count", 1);
 
         // Optionally check for token and get user-specific data (like/focus status)
         String token = getTokenFromCookie();

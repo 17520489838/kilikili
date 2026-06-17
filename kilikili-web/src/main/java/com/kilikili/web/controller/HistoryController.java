@@ -3,8 +3,9 @@ package com.kilikili.web.controller;
 import com.kilikili.component.RedisComponent;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
-import com.kilikili.entity.po.PlayHistory;
 import com.kilikili.entity.vo.PaginationResultVO;
+
+import java.util.Map;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
 import com.kilikili.service.PlayHistoryService;
@@ -36,7 +37,7 @@ public class HistoryController extends ABaseController {
         if (tokenUserInfoDto == null) {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
-        PaginationResultVO<PlayHistory> result = playHistoryService.loadHistory(tokenUserInfoDto.getUserId(), pageNo);
+        PaginationResultVO<Map<String, Object>> result = playHistoryService.loadHistory(tokenUserInfoDto.getUserId(), pageNo);
         return getSuccessResponseVO(result);
     }
 

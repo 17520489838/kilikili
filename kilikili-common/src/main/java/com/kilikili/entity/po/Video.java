@@ -1,6 +1,7 @@
 package com.kilikili.entity.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,6 +22,9 @@ public class Video implements Serializable {
 
     // 文件ID（非数据库字段，用于前端获取视频资源）
     private String fileId;
+
+    // 用户头像（非数据库字段）
+    private String avatar;
     private String videoName;
     private String videoCover;
     private Integer categoryId;
@@ -54,4 +58,14 @@ public class Video implements Serializable {
     private Date updateTime;
 
     private Integer isDeleted;
+
+    @JsonProperty("postTime")
+    public Date getPostTime() {
+        return this.createTime;
+    }
+
+    @JsonProperty("nickName")
+    public String getNickName() {
+        return this.userName;
+    }
 }

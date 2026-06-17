@@ -11,6 +11,7 @@ import com.kilikili.service.UserCollectionService;
 import com.kilikili.service.UserFocusService;
 import com.kilikili.service.UserInfoService;
 import com.kilikili.service.VideoService;
+import com.kilikili.utils.StringTools;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -106,12 +107,28 @@ public class UhomeController extends ABaseController {
     }
 
     @RequestMapping("/loadFocusList")
-    public ResponseVO loadFocusList(@NotEmpty String userId) {
+    public ResponseVO loadFocusList(String userId) {
+        if (StringTools.isEmpty(userId)) {
+            String token = getTokenFromCookie();
+            TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+            if (tokenUserInfoDto == null) {
+                throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+            }
+            userId = tokenUserInfoDto.getUserId();
+        }
         return getSuccessResponseVO(userFocusService.loadFocusList(userId));
     }
 
     @RequestMapping("/loadFansList")
-    public ResponseVO loadFansList(@NotEmpty String userId) {
+    public ResponseVO loadFansList(String userId) {
+        if (StringTools.isEmpty(userId)) {
+            String token = getTokenFromCookie();
+            TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+            if (tokenUserInfoDto == null) {
+                throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+            }
+            userId = tokenUserInfoDto.getUserId();
+        }
         return getSuccessResponseVO(userFocusService.loadFansList(userId));
     }
 
@@ -124,6 +141,17 @@ public class UhomeController extends ABaseController {
         }
         return getSuccessResponseVO(userCollectionService.loadUserCollection(
                 tokenUserInfoDto.getUserId(), pageNo));
+    }
+
+    @RequestMapping("/getCoinBalance")
+    public ResponseVO getCoinBalance() {
+        String token = getTokenFromCookie();
+        TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+        if (tokenUserInfoDto == null) {
+            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+        }
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(tokenUserInfoDto.getUserId());
+        return getSuccessResponseVO(userInfo != null ? userInfo.getCurrentCoinCount() : 0);
     }
 
     @RequestMapping("/saveTheme")

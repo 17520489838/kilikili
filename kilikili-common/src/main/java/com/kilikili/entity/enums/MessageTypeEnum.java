@@ -8,7 +8,8 @@ public enum MessageTypeEnum {
     COMMENT(1, "评论"),
     LIKE(2, "点赞"),
     COLLECT(3, "收藏"),
-    FOCUS(4, "关注");
+    FOCUS(4, "关注"),
+    COIN(5, "投币");
 
     private final Integer code;
     private final String desc;

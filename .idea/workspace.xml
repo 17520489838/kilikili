@@ -4,11 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="成功实现上传视频,转码视频,视频成功在页面播放的全流程">
+    <list default="true" id="4151843d-4eeb-418e-a365-2c0c462e796b" name="更改" comment="优化视频播放界面,在推荐界面显示视频时长,解决重复上传视频问题,目前视频上传,发布,播放方面的bug全部修复">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoFileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoFileServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoFileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoFileServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/MessageTypeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/enums/MessageTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/entity/po/Video.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/PlayHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/PlayHistoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/UserActionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/UserActionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/DanmuServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/DanmuServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/PlayHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/PlayHistoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/UserActionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/UserActionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/service/impl/VideoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UserActionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/src/main/resources/com/mappers/UserActionMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/MessageTypeEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/enums/MessageTypeEnum.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Video.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/entity/po/Video.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/PlayHistoryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/PlayHistoryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserActionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/UserActionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/DanmuServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/DanmuServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/PlayHistoryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/PlayHistoryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserActionServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/UserActionServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-common/target/classes/com/kilikili/service/impl/VideoServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/HistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/HistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UhomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UhomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UserActionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/UserActionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/VideoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/src/main/java/com/kilikili/web/controller/VideoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/HistoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/HistoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UhomeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UhomeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UserActionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/UserActionController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/VideoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/kilikili-web/target/classes/com/kilikili/web/controller/VideoController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -225,7 +246,8 @@
       <workItem from="1781482679472" duration="11976000" />
       <workItem from="1781520267469" duration="2830000" />
       <workItem from="1781523130897" duration="3973000" />
-      <workItem from="1781585387528" duration="10370000" />
+      <workItem from="1781585387528" duration="11096000" />
+      <workItem from="1781671142461" duration="5519000" />
     </task>
     <task id="LOCAL-00001" summary="实现登录注册功能">
       <option name="closed" value="true" />
@@ -299,7 +321,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781612948221</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="优化视频播放界面,在推荐界面显示视频时长,解决重复上传视频问题,目前视频上传,发布,播放方面的bug全部修复">
+      <option name="closed" value="true" />
+      <created>1781616143236</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1781616143236</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +353,8 @@
     <MESSAGE value="成功实现文件上传功能,用户端和后台都能查询到上传视频" />
     <MESSAGE value="优化分类管理,通过树和数组成功实现父子分类进行两级分类管理,完善前端分类管理界面.改进文件上传及视频编辑功能,以及设置保存,创作中心功能基本完善,耶耶耶!!!!!" />
     <MESSAGE value="成功实现上传视频,转码视频,视频成功在页面播放的全流程" />
-    <option name="LAST_COMMIT_MESSAGE" value="成功实现上传视频,转码视频,视频成功在页面播放的全流程" />
+    <MESSAGE value="优化视频播放界面,在推荐界面显示视频时长,解决重复上传视频问题,目前视频上传,发布,播放方面的bug全部修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化视频播放界面,在推荐界面显示视频时长,解决重复上传视频问题,目前视频上传,发布,播放方面的bug全部修复" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -331,7 +362,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/kilikili-common/src/main/java/com/kilikili/mappers/UserInfoMapper.java</url>
           <line>85</line>
-          <properties class="com.kilikili.mappers.UserInfoMapper" method="selectListByCondition">
+          <properties class="com.kilikili.mappers.UserInfoMapper">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
