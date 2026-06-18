@@ -73,7 +73,6 @@
         WHERE user_id = #{userId}
           AND video_id = #{videoId}
           AND action_type = #{actionType}
-          AND is_deleted = 0
         LIMIT 1
     </select>
 

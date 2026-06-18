@@ -18,13 +18,14 @@
         id, user_id, focus_user_id, create_time, update_time, is_deleted
     </sql>
 
-    <!-- 插入用户关注 -->
+    <!-- 插入用户关注(若已存在则恢复) -->
     <insert id="insert" parameterType="com.kilikili.entity.po.UserFocus">
         INSERT INTO kilikili_user_focus (
-            user_id, focus_user_id
+            user_id, focus_user_id, is_deleted
         ) VALUES (
-            #{userId}, #{focusUserId}
+            #{userId}, #{focusUserId}, 0
         )
+        ON DUPLICATE KEY UPDATE is_deleted = 0, update_time = NOW()
     </insert>
 
     <!-- 根据用户ID和关注用户ID删除(逻辑删除) -->
@@ -58,6 +59,7 @@
         <where>
             <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
             <if test="query.focusUserId != null and query.focusUserId != ''">AND focus_user_id = #{query.focusUserId}</if>
+            AND is_deleted = 0
         </where>
     </sql>
 

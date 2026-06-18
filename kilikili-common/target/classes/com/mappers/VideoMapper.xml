@@ -169,4 +169,11 @@
         <include refid="Where_Condition"/>
     </select>
 
+    <!-- 查询用户获得的总点赞数 -->
+    <select id="selectTotalLikeCount" resultType="java.lang.Integer">
+        SELECT COALESCE(SUM(like_count), 0)
+        FROM kilikili_video
+        WHERE user_id = #{userId} AND (is_deleted IS NULL OR is_deleted = 0)
+    </select>
+
 </mapper>

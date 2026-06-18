@@ -19,4 +19,6 @@ public interface VideoMapper {
     List<Video> selectListByCondition(@Param("query") VideoQuery query);
     Long selectCountByCondition(@Param("query") VideoQuery query);
     void updateCount(@Param("videoId") String videoId, @Param("field") String field, @Param("count") Integer count);
+
+    Integer selectTotalLikeCount(@Param("userId") String userId);
 }

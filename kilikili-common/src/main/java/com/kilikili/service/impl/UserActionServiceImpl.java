@@ -37,17 +37,18 @@ public class UserActionServiceImpl implements UserActionService {
     @Transactional(rollbackFor = Exception.class)
     public void doAction(TokenUserInfoDto token, String videoId, Integer actionType,
                          Integer actionCount, String commentId) {
-        // Check if user already performed this action
+        // Check if user already performed this action (including soft-deleted)
         UserAction existingAction = userActionMapper.selectByUserVideoAction(
                 token.getUserId(), videoId, actionType);
 
-        if (existingAction != null) {
+        if (existingAction != null && existingAction.getIsDeleted() == 0) {
             // Coins are one-way consumption, cannot be undone
             if (UserActionTypeEnum.COIN.getCode().equals(actionType)) {
                 throw new BusinessException("已投过币，不能重复投币");
             }
-            // Action already exists -> undo (remove action)
+            // Action is active -> undo (soft delete)
             existingAction.setIsDeleted(1);
+            existingAction.setUpdateTime(new Date());
             userActionMapper.updateByUserVideoAction(existingAction);
 
             // Decrement video counter
@@ -55,8 +56,37 @@ public class UserActionServiceImpl implements UserActionService {
             if (countField != null) {
                 videoMapper.updateCount(videoId, countField, -1);
             }
+        } else if (existingAction != null && existingAction.getIsDeleted() == 1) {
+            // Action was soft-deleted -> restore it (prevent unique key conflict)
+            existingAction.setIsDeleted(0);
+            existingAction.setActionCount(actionCount != null ? actionCount : 1);
+            existingAction.setCommentId(commentId);
+            existingAction.setLastActionTime(new Date());
+            existingAction.setUpdateTime(new Date());
+            userActionMapper.updateByUserVideoAction(existingAction);
+
+            // Increment video counter
+            String countField = getCountFieldByActionType(actionType);
+            if (countField != null) {
+                videoMapper.updateCount(videoId, countField, 1);
+            }
+
+            // Send notification for like/collect actions
+            Video video = videoMapper.selectByVideoId(videoId);
+            if (video != null && !video.getUserId().equals(token.getUserId())) {
+                Integer messageType = null;
+                if (UserActionTypeEnum.LIKE.getCode().equals(actionType)) {
+                    messageType = MessageTypeEnum.LIKE.getCode();
+                } else if (UserActionTypeEnum.COLLECT.getCode().equals(actionType)) {
+                    messageType = MessageTypeEnum.COLLECT.getCode();
+                }
+                if (messageType != null) {
+                    messageService.addMessage(video.getUserId(), token.getUserId(),
+                            messageType, "", videoId);
+                }
+            }
         } else {
-            // Action does not exist -> add action
+            // No existing record -> add new action
             UserAction action = new UserAction();
             action.setUserId(token.getUserId());
             action.setVideoId(videoId);

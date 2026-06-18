@@ -1,5 +1,6 @@
 package com.kilikili.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.kilikili.component.RedisComponent;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
@@ -7,6 +8,8 @@ import com.kilikili.entity.enums.VideoStatusEnum;
 import com.kilikili.entity.po.UserInfo;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
+import com.kilikili.mappers.UserFocusMapper;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.service.UserCollectionService;
 import com.kilikili.service.UserFocusService;
 import com.kilikili.service.UserInfoService;
@@ -35,6 +38,12 @@ public class UhomeController extends ABaseController {
 
     @Resource
     private UserCollectionService userCollectionService;
+
+    @Resource
+    private UserFocusMapper userFocusMapper;
+
+    @Resource
+    private VideoMapper videoMapper;
 
     @Resource
     private RedisComponent redisComponent;
@@ -81,7 +90,21 @@ public class UhomeController extends ABaseController {
 
     @RequestMapping("/getUserInfo")
     public ResponseVO getUserInfo(@NotEmpty String userId) {
-        return getSuccessResponseVO(userInfoService.getUserInfoByUserId(userId));
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(userId);
+        if (userInfo == null) {
+            return getSuccessResponseVO(null);
+        }
+        JSONObject result = (JSONObject) JSONObject.toJSON(userInfo);
+        // Add computed fields
+        Long focusCount = userFocusMapper.selectFocusCount(userId);
+        Long fansCount = userFocusMapper.selectFansCount(userId);
+        result.put("focusCount", focusCount != null ? focusCount.intValue() : 0);
+        result.put("fansCount", fansCount != null ? fansCount.intValue() : 0);
+        Integer totalLikeCount = videoMapper.selectTotalLikeCount(userId);
+        result.put("totalLikeCount", totalLikeCount != null ? totalLikeCount : 0);
+        // Map personIntroduction to description for frontend compatibility
+        result.put("description", userInfo.getPersonIntroduction() != null ? userInfo.getPersonIntroduction() : "");
+        return getSuccessResponseVO(result);
     }
 
     @RequestMapping("/focus")
@@ -152,6 +175,17 @@ public class UhomeController extends ABaseController {
         }
         UserInfo userInfo = userInfoService.getUserInfoByUserId(tokenUserInfoDto.getUserId());
         return getSuccessResponseVO(userInfo != null ? userInfo.getCurrentCoinCount() : 0);
+    }
+
+    @RequestMapping("/isFocus")
+    public ResponseVO isFocus(@NotEmpty String focusUserId) {
+        String token = getTokenFromCookie();
+        TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+        if (tokenUserInfoDto == null) {
+            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+        }
+        Boolean result = userFocusService.isFocus(tokenUserInfoDto.getUserId(), focusUserId);
+        return getSuccessResponseVO(result != null && result);
     }
 
     @RequestMapping("/saveTheme")
