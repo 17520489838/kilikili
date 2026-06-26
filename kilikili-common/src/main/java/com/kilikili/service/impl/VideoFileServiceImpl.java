@@ -12,6 +12,7 @@ import com.kilikili.mappers.VideoFileMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoFileService;
 import com.kilikili.service.VideoTranscodeService;
+import com.kilikili.utils.FFmpegUtils;
 import com.kilikili.utils.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +196,28 @@ public class VideoFileServiceImpl implements VideoFileService {
 
         // Cleanup temp chunk directory only
         cleanupChunkDir(tempDir);
+
+        // Extract video cover from first frame
+        String tempCoverDir = System.getProperty("java.io.tmpdir") + "/kilikili/cover/";
+        new File(tempCoverDir).mkdirs();
+        String coverPath = tempCoverDir + fileId + ".png";
+        boolean frameOk = FFmpegUtils.extractFrame(permanentFile.getAbsolutePath(), coverPath, "00:00:01");
+        if (!frameOk) {
+            frameOk = FFmpegUtils.extractFrame(permanentFile.getAbsolutePath(), coverPath, "00:00:00");
+        }
+        if (frameOk) {
+            try {
+                String coverUrl = uploadImage(coverPath, false);
+                videoFile.setVideoCover(coverUrl);
+                videoFileMapper.updateByFileId(videoFile);
+                logger.info("视频封面自动生成成功: {}", coverUrl);
+            } catch (Exception e) {
+                logger.warn("封面上传失败(不影响主流程): {}", e.getMessage());
+                new File(coverPath).delete();
+            }
+        } else {
+            logger.warn("视频帧提取失败(不影响主流程), fileId={}", fileId);
+        }
 
         // Trigger async transcoding
         videoTranscodeService.startTranscode(fileId, permanentFile.getAbsolutePath());

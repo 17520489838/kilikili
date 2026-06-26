@@ -14,6 +14,7 @@ import com.kilikili.mappers.VideoMapper;
 import com.kilikili.mappers.VideoPMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.VideoService;
+import com.kilikili.service.UserWatchHistoryService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,9 @@ public class VideoController extends ABaseController {
     @Resource
     private RedisComponent redisComponent;
 
+    @Resource
+    private UserWatchHistoryService userWatchHistoryService;
+
     @RequestMapping("/loadRecommendVideo")
     public ResponseVO loadRecommendVideo() {
         List<Video> result = videoService.loadRecommendVideo();
@@ -79,7 +83,8 @@ public class VideoController extends ABaseController {
         if (token != null && !token.isEmpty()) {
             TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
             if (tokenUserInfoDto != null) {
-                // User is logged in, could retrieve user-specific video status
+                // Record watch history for logged-in user
+                userWatchHistoryService.recordWatch(tokenUserInfoDto.getUserId(), videoId);
             }
         }
 

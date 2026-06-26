@@ -18,6 +18,7 @@
         <result column="upload_id" property="uploadId" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="duration" property="duration" jdbcType="INTEGER"/>
+        <result column="video_cover" property="videoCover" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
@@ -26,17 +27,17 @@
     <!-- 基础列 -->
     <sql id="Base_Column_List">
         id, file_id, user_id, file_name, file_size, file_path, file_suffix, md5,
-        chunk_count, chunk_size, upload_id, status, duration, create_time, update_time, is_deleted
+        chunk_count, chunk_size, upload_id, status, duration, video_cover, create_time, update_time, is_deleted
     </sql>
 
     <!-- 插入视频文件 -->
     <insert id="insert" parameterType="com.kilikili.entity.po.VideoFile">
         INSERT INTO kilikili_video_file (
             file_id, user_id, file_name, file_size, file_path, file_suffix, md5,
-            chunk_count, chunk_size, upload_id, status, duration
+            chunk_count, chunk_size, upload_id, status, duration, video_cover
         ) VALUES (
             #{fileId}, #{userId}, #{fileName}, #{fileSize}, #{filePath}, #{fileSuffix}, #{md5},
-            #{chunkCount}, #{chunkSize}, #{uploadId}, #{status}, #{duration}
+            #{chunkCount}, #{chunkSize}, #{uploadId}, #{status}, #{duration}, #{videoCover}
         )
     </insert>
 
@@ -65,6 +66,7 @@
             <if test="uploadId != null">upload_id = #{uploadId},</if>
             <if test="status != null">status = #{status},</if>
             <if test="duration != null">duration = #{duration},</if>
+            <if test="videoCover != null">video_cover = #{videoCover},</if>
         </set>
         WHERE file_id = #{fileId}
     </update>

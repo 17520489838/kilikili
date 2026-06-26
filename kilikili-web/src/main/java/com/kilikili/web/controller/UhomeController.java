@@ -49,7 +49,7 @@ public class UhomeController extends ABaseController {
     private RedisComponent redisComponent;
 
     @RequestMapping("/updateUserInfo")
-    public ResponseVO updateUserInfo(String nickName, String avatar, String birthday,
+    public ResponseVO updateUserInfo(String nickName, String avatar, String sex, String birthday,
                                      String school, String personIntroduction, String noticeInfo) {
         String token = getTokenFromCookie();
         TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
@@ -65,6 +65,9 @@ public class UhomeController extends ABaseController {
         }
         if (avatar != null) {
             userInfo.setAvatar(avatar);
+        }
+        if (sex != null) {
+            userInfo.setSex(Integer.parseInt(sex));
         }
         if (birthday != null) {
             userInfo.setBirthday(birthday);

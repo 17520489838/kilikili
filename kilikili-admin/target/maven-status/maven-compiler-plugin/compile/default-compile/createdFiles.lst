@@ -1,8 +1,10 @@
+com\kilikili\admin\aspect\LogAspect.class
 com\kilikili\admin\controller\AccountController.class
 com\kilikili\admin\controller\CategoryController.class
 com\kilikili\admin\controller\VideoInfoController.class
 com\kilikili\admin\controller\SettingController.class
 com\kilikili\admin\controller\IndexController.class
+com\kilikili\admin\controller\OperationLogController.class
 com\kilikili\admin\interceptor\WebAppConfigurer.class
 com\kilikili\admin\controller\ABaseController.class
 com\kilikili\admin\controller\FileController.class

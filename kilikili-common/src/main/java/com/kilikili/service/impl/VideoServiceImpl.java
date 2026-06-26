@@ -3,6 +3,7 @@ package com.kilikili.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.kilikili.component.RedisComponent;
+import com.kilikili.config.Appconfig;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.VideoStatusEnum;
@@ -20,7 +21,9 @@ import com.kilikili.mappers.VideoFileMapper;
 import com.kilikili.mappers.VideoMapper;
 import com.kilikili.mappers.VideoPMapper;
 import com.kilikili.redis.RedisUtils;
+import com.kilikili.service.VideoFileService;
 import com.kilikili.service.VideoService;
+import com.kilikili.utils.FFmpegUtils;
 import com.kilikili.utils.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -49,6 +53,10 @@ public class VideoServiceImpl implements VideoService {
     private RedisComponent redisComponent;
     @Resource
     private RedisUtils<Object> redisUtils;
+    @Resource
+    private Appconfig appconfig;
+    @Resource
+    private VideoFileService videoFileService;
 
     private static final Logger logger = LoggerFactory.getLogger(VideoServiceImpl.class);
     private static final String REDIS_KEY_HOT_VIDEO = Constants.REDIS_KEY_PREFIX + "hot:video";
@@ -68,6 +76,23 @@ public class VideoServiceImpl implements VideoService {
         query.setPageSize(pageSize);
 
         List<Video> list = videoMapper.selectListByCondition(query);
+        // 填充视频作者信息(用于后台管理展示)
+        if (list != null && !list.isEmpty()) {
+            java.util.Map<String, UserInfo> userCache = new java.util.HashMap<>();
+            for (Video v : list) {
+                if (v.getUserId() != null) {
+                    UserInfo u = userCache.get(v.getUserId());
+                    if (u == null) {
+                        u = userInfoMapper.selectByUserId(v.getUserId());
+                        if (u != null) userCache.put(v.getUserId(), u);
+                    }
+                    if (u != null) {
+                        v.setUserName(u.getNickName());
+                        v.setAvatar(u.getAvatar());
+                    }
+                }
+            }
+        }
         return new PaginationResultVO<>(simplePage, list);
     }
 
@@ -179,7 +204,23 @@ public class VideoServiceImpl implements VideoService {
             if (!Objects.equals(existVideo.getUserId(), token.getUserId())) {
                 throw new BusinessException("无权操作该视频");
             }
-            existVideo.setVideoCover(videoCover);
+            if (videoCover != null && !videoCover.isEmpty()) {
+                existVideo.setVideoCover(videoCover);
+            } else if (existVideo.getVideoCover() == null || existVideo.getVideoCover().isEmpty()) {
+                String firstFileId = getFirstFileId(videoId);
+                if (firstFileId != null) {
+                    // 优先使用 merge 时预生成的封面
+                    VideoFile vf = videoFileMapper.selectByFileId(firstFileId);
+                    if (vf != null && vf.getVideoCover() != null && !vf.getVideoCover().isEmpty()) {
+                        existVideo.setVideoCover(vf.getVideoCover());
+                    } else {
+                        String coverUrl = autoGenerateCover(firstFileId);
+                        if (coverUrl != null) {
+                            existVideo.setVideoCover(coverUrl);
+                        }
+                    }
+                }
+            }
             existVideo.setVideoName(videoName);
             existVideo.setPCategoryId(pCategoryId);
             existVideo.setCategoryId(categoryId);
@@ -249,7 +290,21 @@ public class VideoServiceImpl implements VideoService {
         Video video = new Video();
         video.setVideoId(videoId);
         video.setUserId(token.getUserId());
-        video.setVideoCover(videoCover);
+        if (videoCover != null && !videoCover.isEmpty()) {
+            video.setVideoCover(videoCover);
+        } else {
+            String firstFileId = fileArray.getJSONObject(0).getString("fileId");
+            // 优先使用 merge 时预生成的封面
+            VideoFile vf = videoFileMapper.selectByFileId(firstFileId);
+            if (vf != null && vf.getVideoCover() != null && !vf.getVideoCover().isEmpty()) {
+                video.setVideoCover(vf.getVideoCover());
+            } else {
+                String coverUrl = autoGenerateCover(firstFileId);
+                if (coverUrl != null) {
+                    video.setVideoCover(coverUrl);
+                }
+            }
+        }
         video.setVideoName(videoName);
         video.setPCategoryId(pCategoryId);
         video.setCategoryId(categoryId);
@@ -351,5 +406,66 @@ public class VideoServiceImpl implements VideoService {
             throw new BusinessException("无权操作该视频");
         }
         videoMapper.deleteByVideoId(videoId);
+    }
+
+    /**
+     * 获取用户视频的第一个文件ID
+     */
+    private String getFirstFileId(String videoId) {
+        VideoPQuery vpQuery = new VideoPQuery();
+        vpQuery.setVideoId(videoId);
+        List<VideoP> vpList = videoPMapper.selectListByCondition(vpQuery);
+        if (vpList != null && !vpList.isEmpty()) {
+            return vpList.get(0).getFileId();
+        }
+        return null;
+    }
+
+    /**
+     * 从视频第一帧自动生成封面并上传到OSS
+     */
+    private String autoGenerateCover(String fileId) {
+        VideoFile videoFile = videoFileMapper.selectByFileId(fileId);
+        if (videoFile == null) return null;
+
+        String projectFolder = appconfig.getProjectFolder();
+        String videoPath = projectFolder + "video/original/" + fileId + "/" + videoFile.getFileName();
+
+        // 尝试原始文件
+        File vidFile = new File(videoPath);
+        if (!vidFile.exists()) {
+            // 尝试转码后的MP4
+            videoPath = projectFolder + "video/transcode/" + fileId + "/index.mp4";
+            vidFile = new File(videoPath);
+            if (!vidFile.exists()) {
+                logger.warn("自动生成封面失败: 原文件不存在, fileId={}", fileId);
+                return null;
+            }
+        }
+
+        String tempDir = System.getProperty("java.io.tmpdir") + "/kilikili/cover/";
+        new File(tempDir).mkdirs();
+        String outputPath = tempDir + fileId + ".png";
+
+        // 提取第1秒的帧
+        boolean success = FFmpegUtils.extractFrame(videoPath, outputPath, "00:00:01");
+        if (!success) {
+            // 尝试第0秒
+            success = FFmpegUtils.extractFrame(videoPath, outputPath, "00:00:00");
+        }
+        if (!success) {
+            logger.warn("自动生成封面失败: FFmpeg提取帧失败, fileId={}", fileId);
+            return null;
+        }
+
+        try {
+            String coverUrl = videoFileService.uploadImage(outputPath, false);
+            logger.info("自动生成的封面上传成功: {}", coverUrl);
+            return coverUrl;
+        } catch (Exception e) {
+            logger.error("自动生成封面上传OSS失败: {}", e.getMessage());
+            new File(outputPath).delete();
+            return null;
+        }
     }
 }

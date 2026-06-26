@@ -23,8 +23,8 @@ public class InteractController extends ABaseController {
     private CommentService commentService;
 
     @RequestMapping("/loadDanmu")
-    public ResponseVO loadDanmu(Integer pageNo, Integer pageSize, String videoId) {
-        return getSuccessResponseVO(danmuService.loadDanmuByPage(pageNo, pageSize));
+    public ResponseVO loadDanmu(Integer pageNo, Integer pageSize, String videoId, String textFuzzy) {
+        return getSuccessResponseVO(danmuService.loadDanmuByPage(pageNo, pageSize, videoId, textFuzzy));
     }
 
     @RequestMapping("/delDanmu")

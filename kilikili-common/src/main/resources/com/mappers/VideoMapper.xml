@@ -176,4 +176,16 @@
         WHERE user_id = #{userId} AND (is_deleted IS NULL OR is_deleted = 0)
     </select>
 
+    <!-- 查询用户视频统计(视频数/播放量/点赞/投币/收藏) -->
+    <select id="selectVideoStatsByUserId" resultType="java.util.Map">
+        SELECT
+            COUNT(1) AS videoCount,
+            COALESCE(SUM(play_count), 0) AS playCount,
+            COALESCE(SUM(like_count), 0) AS likeCount,
+            COALESCE(SUM(coin_count), 0) AS coinCount,
+            COALESCE(SUM(collect_count), 0) AS collectCount
+        FROM kilikili_video
+        WHERE user_id = #{userId} AND (is_deleted IS NULL OR is_deleted = 0)
+    </select>
+
 </mapper>

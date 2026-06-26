@@ -23,13 +23,18 @@
         last_action_time, create_time, update_time, is_deleted
     </sql>
 
-    <!-- 插入用户行为 -->
+    <!-- 插入用户行为（存在重复键时更新，避免并发插入报错） -->
     <insert id="insert" parameterType="com.kilikili.entity.po.UserAction">
         INSERT INTO kilikili_user_action (
             user_id, video_id, comment_id, action_type, action_count, last_action_time
         ) VALUES (
             #{userId}, #{videoId}, #{commentId}, #{actionType}, #{actionCount}, #{lastActionTime}
         )
+        ON DUPLICATE KEY UPDATE
+            comment_id = VALUES(comment_id),
+            action_count = VALUES(action_count),
+            last_action_time = VALUES(last_action_time),
+            is_deleted = 0
     </insert>
 
     <!-- 根据ID删除(逻辑删除) -->
@@ -66,12 +71,23 @@
         ORDER BY create_time DESC
     </select>
 
-    <!-- 根据用户、视频和行为类型查询 -->
+    <!-- 根据用户、视频和行为类型查询（仅视频级别） -->
     <select id="selectByUserVideoAction" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM kilikili_user_action
         WHERE user_id = #{userId}
           AND video_id = #{videoId}
+          AND comment_id = ''
+          AND action_type = #{actionType}
+        LIMIT 1
+    </select>
+
+    <!-- 根据用户、评论和行为类型查询 -->
+    <select id="selectByUserCommentAction" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_user_action
+        WHERE user_id = #{userId}
+          AND comment_id = #{commentId}
           AND action_type = #{actionType}
         LIMIT 1
     </select>
@@ -86,7 +102,7 @@
             <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </set>
-        WHERE user_id = #{userId} AND video_id = #{videoId} AND action_type = #{actionType}
+        WHERE user_id = #{userId} AND video_id = #{videoId} AND comment_id = #{commentId} AND action_type = #{actionType}
     </update>
 
     <!-- 批量插入 -->

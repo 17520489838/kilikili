@@ -3,8 +3,6 @@ package com.kilikili.web.controller;
 import com.kilikili.component.RedisComponent;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
-import com.kilikili.entity.po.Comment;
-import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
 import com.kilikili.service.CommentService;
@@ -13,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @RestController("webCommentController")
 @RequestMapping("/comment")
@@ -41,10 +37,26 @@ public class CommentController extends ABaseController {
     }
 
     @RequestMapping("/loadComment")
-    public ResponseVO loadComment(@NotEmpty String videoId, @NotNull @Min(1) Integer pageNo,
-                                  Integer orderType) {
-        PaginationResultVO<Comment> result = commentService.loadComment(videoId, pageNo, orderType);
-        return getSuccessResponseVO(result);
+    public ResponseVO loadComment(@NotEmpty String videoId, Integer pageNo, Integer orderType) {
+        return getSuccessResponseVO(commentService.loadComment(
+                videoId, pageNo != null ? pageNo : 1, orderType));
+    }
+
+    @RequestMapping("/likeComment")
+    public ResponseVO likeComment(@NotEmpty String commentId, @NotEmpty String videoId) {
+        String token = getTokenFromCookie();
+        TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
+        if (tokenUserInfoDto == null) {
+            throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
+        }
+        commentService.likeComment(tokenUserInfoDto, commentId, videoId);
+        return getSuccessResponseVO(null);
+    }
+
+    @RequestMapping("/loadReply")
+    public ResponseVO loadReply(@NotEmpty String videoId, @NotEmpty String commentId, Integer pageNo) {
+        return getSuccessResponseVO(commentService.loadReply(
+                videoId, commentId, pageNo != null ? pageNo : 1));
     }
 
     @RequestMapping("/topComment")

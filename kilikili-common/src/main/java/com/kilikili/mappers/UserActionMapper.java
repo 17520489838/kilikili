@@ -13,6 +13,7 @@ public interface UserActionMapper {
     Integer insertBatch(@Param("list") List<UserAction> list);
     Integer updateByUserVideoAction(UserAction userAction);
     UserAction selectByUserVideoAction(@Param("userId") String userId, @Param("videoId") String videoId, @Param("actionType") Integer actionType);
+    UserAction selectByUserCommentAction(@Param("userId") String userId, @Param("commentId") String commentId, @Param("actionType") Integer actionType);
     List<UserAction> selectListByCondition(@Param("query") UserActionQuery query);
     Long selectCountByCondition(@Param("query") UserActionQuery query);
 }

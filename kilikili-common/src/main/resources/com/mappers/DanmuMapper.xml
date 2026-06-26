@@ -35,10 +35,10 @@
         )
     </insert>
 
-    <!-- 根据弹幕ID删除(逻辑删除) -->
-    <update id="deleteByDanmuId">
-        UPDATE kilikili_danmu SET is_deleted = 1 WHERE danmu_id = #{danmuId}
-    </update>
+    <!-- 根据弹幕ID删除(硬删除) -->
+    <delete id="deleteByDanmuId">
+        DELETE FROM kilikili_danmu WHERE danmu_id = #{danmuId}
+    </delete>
 
     <!-- 根据弹幕ID更新 -->
     <update id="updateByDanmuId" parameterType="com.kilikili.entity.po.Danmu">
@@ -96,6 +96,7 @@
             <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
             <if test="query.timePointStart != null">AND time_point &gt;= #{query.timePointStart}</if>
             <if test="query.timePointEnd != null">AND time_point &lt;= #{query.timePointEnd}</if>
+            <if test="query.textFuzzy != null and query.textFuzzy != ''">AND content LIKE CONCAT('%', #{query.textFuzzy}, '%')</if>
         </where>
     </sql>
 

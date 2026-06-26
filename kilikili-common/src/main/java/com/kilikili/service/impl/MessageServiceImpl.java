@@ -2,11 +2,14 @@ package com.kilikili.service.impl;
 
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.po.Message;
+import com.kilikili.entity.po.UserInfo;
 import com.kilikili.entity.query.MessageQuery;
 import com.kilikili.entity.query.SimplePage;
 import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.exception.BusinessException;
 import com.kilikili.mappers.MessageMapper;
+import com.kilikili.mappers.UserInfoMapper;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.service.MessageService;
 import com.kilikili.utils.StringTools;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Resource
     private MessageMapper messageMapper;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
     @Override
     public Long getNoReadCount(String receiveUserId) {
@@ -37,6 +43,18 @@ public class MessageServiceImpl implements MessageService {
         Long count = messageMapper.selectCountByCondition(query);
         SimplePage page = new SimplePage(pageNo, query.getPageSize(), count);
         List<Message> list = messageMapper.selectListByCondition(query);
+
+        // Enrich with sender info
+        for (Message msg : list) {
+            if (msg.getSendUserId() != null) {
+                UserInfo sender = userInfoMapper.selectByUserId(msg.getSendUserId());
+                if (sender != null) {
+                    msg.setSendNickName(sender.getNickName());
+                    msg.setSendAvatar(sender.getAvatar());
+                }
+            }
+        }
+
         return new PaginationResultVO<>(page, list);
     }
 

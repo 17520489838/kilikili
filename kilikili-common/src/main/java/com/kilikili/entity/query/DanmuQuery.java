@@ -12,4 +12,5 @@ public class DanmuQuery extends BaseParma {
     private String userId;
     private Integer timePointStart;
     private Integer timePointEnd;
+    private String textFuzzy;
 }

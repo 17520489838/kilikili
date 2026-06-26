@@ -30,4 +30,8 @@ public class Message implements Serializable {
     private Date updateTime;
 
     private Integer isDeleted;
+
+    // Transient fields (not in DB)
+    private String sendNickName;
+    private String sendAvatar;
 }

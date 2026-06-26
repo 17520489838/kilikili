@@ -12,6 +12,7 @@ public class CommentQuery extends BaseParma {
     private String videoId;
     private String userId;
     private String pCommentId;
+    private Boolean pCommentIdNull; // Filter for p_comment_id IS NULL
     private Integer status;
     private Integer topType;
     private Date createTimeStart;

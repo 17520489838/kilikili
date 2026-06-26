@@ -254,6 +254,35 @@ public class FFmpegUtils {
     }
 
     /**
+     * 提取视频指定时间点的一帧截图
+     * @param inputPath  视频文件路径
+     * @param outputPath 输出图片路径
+     * @param time       时间点, 如 "00:00:01"
+     * @return 是否成功
+     */
+    public static boolean extractFrame(String inputPath, String outputPath, String time) {
+        List<String> args = new ArrayList<>();
+        args.add("-i");
+        args.add(inputPath);
+        args.add("-ss");
+        args.add(time);
+        args.add("-vframes");
+        args.add("1");
+        args.add("-f");
+        args.add("image2");
+        args.add("-y");
+        args.add(outputPath);
+
+        FfmpegResult result = execute(args);
+        if (result.success) {
+            logger.info("视频帧提取成功: {}", outputPath);
+        } else {
+            logger.error("视频帧提取失败 (exit={}): {}\n{}", result.exitCode, inputPath, result.output);
+        }
+        return result.success;
+    }
+
+    /**
      * 获取视频时长(秒)
      */
     public static int getVideoDuration(String inputPath) {

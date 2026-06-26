@@ -5,12 +5,11 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
-import com.kilikili.entity.enums.VideoStatusEnum;
-import com.kilikili.entity.po.Video;
 import com.kilikili.entity.po.VideoFile;
-import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.component.RedisComponent;
+import com.kilikili.mappers.UserFocusMapper;
+import com.kilikili.mappers.VideoMapper;
 import com.kilikili.service.VideoFileService;
 import com.kilikili.service.VideoService;
 import com.kilikili.exception.BusinessException;
@@ -38,6 +37,12 @@ public class UcenterController extends ABaseController {
 
     @Resource
     private VideoFileService videoFileService;
+
+    @Resource
+    private VideoMapper videoMapper;
+
+    @Resource
+    private UserFocusMapper userFocusMapper;
 
     // 发布视频
     @RequestMapping("/postVideo")
@@ -91,7 +96,7 @@ public class UcenterController extends ABaseController {
                 tokenUserInfoDto.getUserId(), status, videoNameFuzzy, pageNo));
     }
 
-    // 获取视频数量信息
+    // 获取用户创作中心统计数据
     @PostMapping("/getVideoCountInfo")
     public ResponseVO getVideoCountInfo() {
         String token = getTokenFromCookie();
@@ -100,13 +105,24 @@ public class UcenterController extends ABaseController {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
         String userId = tokenUserInfoDto.getUserId();
-        Map<String, Integer> countInfo = new HashMap<>();
-        for (VideoStatusEnum status : VideoStatusEnum.values()) {
-            PaginationResultVO<Video> result = videoService.loadVideoListByUserId(userId, status.getCode(), null, 1);
-            Long totalCount = result.getPageInfo().getTotalCount();
-            countInfo.put(String.valueOf(status.getCode()), totalCount != null ? totalCount.intValue() : 0);
+
+        Map<String, Object> stats = videoMapper.selectVideoStatsByUserId(userId);
+        if (stats == null) {
+            stats = new HashMap<>();
+            stats.put("videoCount", 0);
+            stats.put("playCount", 0);
+            stats.put("likeCount", 0);
+            stats.put("coinCount", 0);
+            stats.put("collectCount", 0);
         }
-        return getSuccessResponseVO(countInfo);
+
+        // 关注数和粉丝数
+        Long focusCount = userFocusMapper.selectFocusCount(userId);
+        Long fansCount = userFocusMapper.selectFansCount(userId);
+        stats.put("focusCount", focusCount != null ? focusCount : 0);
+        stats.put("fansCount", fansCount != null ? fansCount : 0);
+
+        return getSuccessResponseVO(stats);
     }
 
     // 获取视频信息

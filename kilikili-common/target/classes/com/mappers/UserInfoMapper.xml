@@ -59,6 +59,7 @@
         UPDATE kilikili_user_info
         <set>
             <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
             <if test="email != null">email = #{email},</if>
             <if test="password != null">password = #{password},</if>
             <if test="sex != null">sex = #{sex},</if>

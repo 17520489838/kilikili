@@ -4,20 +4,16 @@ import com.kilikili.component.RedisComponent;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.enums.ResponseCodeEnum;
 import com.kilikili.entity.vo.PaginationResultVO;
-
-import java.util.Map;
 import com.kilikili.entity.vo.ResponseVO;
 import com.kilikili.exception.BusinessException;
-import com.kilikili.service.PlayHistoryService;
+import com.kilikili.service.UserWatchHistoryService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 @RestController("webHistoryController")
 @RequestMapping("/history")
@@ -25,7 +21,7 @@ import javax.validation.constraints.NotNull;
 public class HistoryController extends ABaseController {
 
     @Resource
-    private PlayHistoryService playHistoryService;
+    private UserWatchHistoryService userWatchHistoryService;
 
     @Resource
     private RedisComponent redisComponent;
@@ -37,18 +33,19 @@ public class HistoryController extends ABaseController {
         if (tokenUserInfoDto == null) {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
-        PaginationResultVO<Map<String, Object>> result = playHistoryService.loadHistory(tokenUserInfoDto.getUserId(), pageNo);
+        PaginationResultVO<Map<String, Object>> result = userWatchHistoryService.loadHistory(
+                tokenUserInfoDto.getUserId(), pageNo);
         return getSuccessResponseVO(result);
     }
 
     @RequestMapping("/delHistory")
-    public ResponseVO delHistory(@NotEmpty String videoId) {
+    public ResponseVO delHistory(String videoId) {
         String token = getTokenFromCookie();
         TokenUserInfoDto tokenUserInfoDto = redisComponent.getTokenUserInfo(token);
         if (tokenUserInfoDto == null) {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
-        playHistoryService.delHistory(tokenUserInfoDto.getUserId(), videoId);
+        userWatchHistoryService.delHistory(tokenUserInfoDto.getUserId(), videoId);
         return getSuccessResponseVO(null);
     }
 
@@ -59,7 +56,7 @@ public class HistoryController extends ABaseController {
         if (tokenUserInfoDto == null) {
             throw new BusinessException(ResponseCodeEnum.UNAUTHORIZED);
         }
-        playHistoryService.cleanHistory(tokenUserInfoDto.getUserId());
+        userWatchHistoryService.cleanHistory(tokenUserInfoDto.getUserId());
         return getSuccessResponseVO(null);
     }
 }

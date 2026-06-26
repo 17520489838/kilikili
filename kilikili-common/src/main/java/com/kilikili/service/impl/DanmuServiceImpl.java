@@ -3,8 +3,13 @@ package com.kilikili.service.impl;
 import com.kilikili.entity.constants.Constants;
 import com.kilikili.entity.dto.TokenUserInfoDto;
 import com.kilikili.entity.po.Danmu;
+import com.kilikili.entity.po.UserInfo;
+import com.kilikili.entity.po.Video;
 import com.kilikili.entity.query.DanmuQuery;
+import com.kilikili.entity.query.SimplePage;
+import com.kilikili.entity.vo.PaginationResultVO;
 import com.kilikili.mappers.DanmuMapper;
+import com.kilikili.mappers.UserInfoMapper;
 import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.DanmuService;
@@ -13,8 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.kilikili.entity.constants.Constants.LENGTH_10;
 
@@ -25,6 +29,8 @@ public class DanmuServiceImpl implements DanmuService {
     private DanmuMapper danmuMapper;
     @Resource
     private VideoMapper videoMapper;
+    @Resource
+    private UserInfoMapper userInfoMapper;
     @Resource
     private RedisUtils<Object> redisUtils;
 
@@ -83,11 +89,49 @@ public class DanmuServiceImpl implements DanmuService {
     }
 
     @Override
-    public List<Danmu> loadDanmuByPage(Integer pageNo, Integer pageSize) {
+    public PaginationResultVO<Map<String, Object>> loadDanmuByPage(Integer pageNo, Integer pageSize, String videoId, String textFuzzy) {
         DanmuQuery query = new DanmuQuery();
         query.setPageNo(pageNo != null ? pageNo : 1);
         query.setPageSize(pageSize != null ? pageSize : 20);
-        return danmuMapper.selectListByCondition(query);
+        query.setVideoId(videoId);
+        query.setTextFuzzy(textFuzzy);
+        query.setOrderBy("create_time");
+        query.setOrderDirection("desc");
+
+        Long count = danmuMapper.selectCountByCondition(query);
+        SimplePage page = new SimplePage(pageNo, query.getPageSize(), count);
+        List<Danmu> list = danmuMapper.selectListByCondition(query);
+
+        // Enrich with user and video info
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Danmu d : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("danmuId", d.getDanmuId());
+            map.put("content", d.getContent());
+            map.put("timePoint", d.getTimePoint());
+            map.put("createTime", d.getCreateTime());
+            map.put("videoId", d.getVideoId());
+            map.put("userId", d.getUserId());
+
+            // Get user nickname
+            if (d.getUserId() != null) {
+                UserInfo user = userInfoMapper.selectByUserId(d.getUserId());
+                map.put("nickName", user != null ? user.getNickName() : d.getUserId());
+            } else {
+                map.put("nickName", "匿名");
+            }
+
+            // Get video name
+            if (d.getVideoId() != null) {
+                Video video = videoMapper.selectByVideoId(d.getVideoId());
+                map.put("videoName", video != null ? video.getVideoName() : d.getVideoId());
+            } else {
+                map.put("videoName", "-");
+            }
+
+            resultList.add(map);
+        }
+        return new PaginationResultVO<>(page, resultList);
     }
 
     @Override

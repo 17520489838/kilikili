@@ -1,8 +1,10 @@
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\CategoryController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\AccountController.java
+D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\aspect\LogAspect.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\IndexController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\UserController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\FileController.java
+D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\OperationLogController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\ABaseController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\controller\AGlobalExceptionHandlerController.java
 D:\kilikili-all\kilikili-java\kilikili-admin\src\main\java\com\kilikili\admin\interceptor\WebAppConfigurer.java

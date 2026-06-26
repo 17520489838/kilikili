@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface VideoMapper {
@@ -21,4 +22,6 @@ public interface VideoMapper {
     void updateCount(@Param("videoId") String videoId, @Param("field") String field, @Param("count") Integer count);
 
     Integer selectTotalLikeCount(@Param("userId") String userId);
+
+    Map<String, Object> selectVideoStatsByUserId(@Param("userId") String userId);
 }

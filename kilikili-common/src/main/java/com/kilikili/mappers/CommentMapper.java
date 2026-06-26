@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     Integer insert(Comment comment);
+    Integer updateLikeCount(@Param("commentId") String commentId, @Param("delta") Integer delta);
     Integer insertBatch(@Param("list") List<Comment> list);
     Integer deleteByCommentId(@Param("commentId") String commentId);
     Integer deleteByVideoId(@Param("videoId") String videoId);

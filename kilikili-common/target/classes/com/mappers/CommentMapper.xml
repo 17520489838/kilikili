@@ -38,10 +38,10 @@
         )
     </insert>
 
-    <!-- 根据评论ID删除(逻辑删除) -->
-    <update id="deleteByCommentId">
-        UPDATE kilikili_comment SET is_deleted = 1 WHERE comment_id = #{commentId}
-    </update>
+    <!-- 根据评论ID删除(硬删除) -->
+    <delete id="deleteByCommentId">
+        DELETE FROM kilikili_comment WHERE comment_id = #{commentId}
+    </delete>
 
     <!-- 根据评论ID更新 -->
     <update id="updateByCommentId" parameterType="com.kilikili.entity.po.Comment">
@@ -58,6 +58,13 @@
             <if test="status != null">status = #{status},</if>
         </set>
         WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 递增/递减评论点赞数 -->
+    <update id="updateLikeCount">
+        UPDATE kilikili_comment
+        SET like_count = like_count + #{delta}
+        WHERE comment_id = #{commentId} AND is_deleted = 0
     </update>
 
     <!-- 根据评论ID查询 -->
@@ -90,6 +97,7 @@
             <if test="query.videoId != null and query.videoId != ''">AND video_id = #{query.videoId}</if>
             <if test="query.userId != null and query.userId != ''">AND user_id = #{query.userId}</if>
             <if test="query.pCommentId != null and query.pCommentId != ''">AND p_comment_id = #{query.pCommentId}</if>
+            <if test="query.pCommentIdNull != null and query.pCommentIdNull == true">AND p_comment_id IS NULL</if>
             <if test="query.status != null">AND status = #{query.status}</if>
             <if test="query.topType != null">AND top_type = #{query.topType}</if>
             <if test="query.createTimeStart != null">AND create_time &gt;= #{query.createTimeStart}</if>

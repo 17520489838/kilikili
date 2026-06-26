@@ -17,8 +17,14 @@ public class ScheduleConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduleConfig.class);
 
-    @javax.annotation.Resource
+        @javax.annotation.Resource
     private com.kilikili.config.Appconfig appconfig;
+
+    @javax.annotation.Resource
+    private com.kilikili.mappers.UserWatchHistoryMapper userWatchHistoryMapper;
+
+    @javax.annotation.Resource
+    private com.kilikili.service.UserWatchHistoryService userWatchHistoryService;
 
     /**
      * 每天凌晨清理过期的分片上传临时文件
@@ -39,6 +45,23 @@ public class ScheduleConfig {
             }
         }
         logger.info("临时文件清理完成");
+    }
+
+    /**
+     * 每天凌晨3点清理观看历史，每用户保留50条
+     */
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void cleanWatchHistory() {
+        logger.info("开始清理观看历史...");
+        try {
+            java.util.List<String> userIds = userWatchHistoryMapper.selectDistinctUserIds();
+            for (String uid : userIds) {
+                userWatchHistoryService.cleanUpOldRecords(uid, 50);
+            }
+            logger.info("观看历史清理完成，共处理 {} 个用户", userIds.size());
+        } catch (Exception e) {
+            logger.error("观看历史清理异常", e);
+        }
     }
 
     private void deleteDir(File dir) {
