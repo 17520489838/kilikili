@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.OperationLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.OperationLog">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="oper_id" property="operId" jdbcType="VARCHAR"/>
+        <result column="oper_module" property="operModule" jdbcType="VARCHAR"/>
+        <result column="oper_type" property="operType" jdbcType="VARCHAR"/>
+        <result column="oper_desc" property="operDesc" jdbcType="VARCHAR"/>
+        <result column="request_url" property="requestUrl" jdbcType="VARCHAR"/>
+        <result column="request_params" property="requestParams" jdbcType="VARCHAR"/>
+        <result column="oper_user_id" property="operUserId" jdbcType="VARCHAR"/>
+        <result column="oper_user_name" property="operUserName" jdbcType="VARCHAR"/>
+        <result column="oper_ip" property="operIp" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, oper_id, oper_module, oper_type, oper_desc, request_url, request_params,
+        oper_user_id, oper_user_name, oper_ip, status, error_msg, create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.kilikili.entity.po.OperationLog">
+        INSERT INTO kilikili_operation_log (
+            oper_id, oper_module, oper_type, oper_desc, request_url, request_params,
+            oper_user_id, oper_user_name, oper_ip, status, error_msg
+        ) VALUES (
+            #{operId}, #{operModule}, #{operType}, #{operDesc}, #{requestUrl}, #{requestParams},
+            #{operUserId}, #{operUserName}, #{operIp}, #{status}, #{errorMsg}
+        )
+    </insert>
+
+    <sql id="Where_Condition">
+        <where>
+            <if test="query.operModule != null and query.operModule != ''">AND oper_module LIKE CONCAT('%', #{query.operModule}, '%')</if>
+            <if test="query.operType != null and query.operType != ''">AND oper_type = #{query.operType}</if>
+            <if test="query.operUserName != null and query.operUserName != ''">AND oper_user_name LIKE CONCAT('%', #{query.operUserName}, '%')</if>
+        </where>
+    </sql>
+
+    <select id="selectListByCondition" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_operation_log
+        <include refid="Where_Condition"/>
+        <choose>
+            <when test="query.orderBy != null and query.orderBy != ''">
+                ORDER BY ${query.orderBy} ${query.orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY create_time DESC
+            </otherwise>
+        </choose>
+        <if test="query.pageNo != null and query.pageSize != null">
+            LIMIT #{query.pageSize} OFFSET #{query.startIndex}
+        </if>
+    </select>
+
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM kilikili_operation_log
+        <include refid="Where_Condition"/>
+    </select>
+
+    <delete id="cleanAll">
+        DELETE FROM kilikili_operation_log
+    </delete>
+
+</mapper>

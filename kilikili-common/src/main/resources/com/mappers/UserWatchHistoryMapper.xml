@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kilikili.mappers.UserWatchHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.kilikili.entity.po.UserWatchHistory">
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <id column="video_id" property="videoId" jdbcType="VARCHAR"/>
+        <result column="watched_at" property="watchedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id, video_id, watched_at
+    </sql>
+
+    <insert id="insertOrUpdate">
+        INSERT INTO kilikili_watch_history (user_id, video_id, watched_at)
+        VALUES (#{userId}, #{videoId}, NOW())
+        ON DUPLICATE KEY UPDATE watched_at = NOW()
+    </insert>
+
+    <select id="selectRecentByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_watch_history
+        WHERE user_id = #{userId}
+        ORDER BY watched_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectRecentByUserIdOffset" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_watch_history
+        WHERE user_id = #{userId}
+        ORDER BY watched_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countByUserId" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM kilikili_watch_history WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectOldByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_watch_history
+        WHERE user_id = #{userId}
+        ORDER BY watched_at DESC
+        LIMIT 18446744073709551615 OFFSET #{offset}
+    </select>
+
+    <delete id="deleteByUserIdVideoId">
+        DELETE FROM kilikili_watch_history
+        WHERE user_id = #{userId} AND video_id = #{videoId}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM kilikili_watch_history WHERE user_id = #{userId}
+    </delete>
+
+    <select id="selectDistinctUserIds" resultType="java.lang.String">
+        SELECT DISTINCT user_id FROM kilikili_watch_history
+    </select>
+
+    <select id="selectCountByDateRange" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM kilikili_watch_history
+        WHERE watched_at &gt;= #{startDate}
+        <if test="endDate != null">AND watched_at &lt;= #{endDate}</if>
+    </select>
+
+    <select id="selectListByDateRange" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM kilikili_watch_history
+        WHERE watched_at &gt;= #{startDate}
+        <if test="endDate != null">AND watched_at &lt;= #{endDate}</if>
+        ORDER BY watched_at ASC
+    </select>
+
+</mapper>
