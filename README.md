@@ -12,6 +12,7 @@
 ![Vite](https://img.shields.io/badge/Vite-5.2-%23646CFF?logo=vite&logoColor=white)
 ![Element Plus](https://img.shields.io/badge/Element_Plus-2.5-%23409EFF?logo=element&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![AI](https://img.shields.io/badge/AI-DeepSeek_V4-%235C4EE5?logo=openai&logoColor=white)
 
 ---
 
@@ -20,9 +21,11 @@
 - [项目简介](#项目简介)
 - [项目背景与动机](#项目背景与动机)
 - [核心功能](#核心功能)
+- [AI 功能](#ai-功能)
 - [技术栈与架构](#技术栈与架构)
 - [挑战与解决方案](#挑战与解决方案)
 - [快速开始](#快速开始)
+- [AI 配置](#ai-配置)
 - [使用示例](#使用示例)
 - [测试](#测试)
 - [项目结构](#项目结构)
@@ -60,6 +63,7 @@ Kilikili 是一个前后端分离的视频分享平台，提供完整的视频�
 | **评论系统** | 多级评论、置顶、用户自主删除 |
 | **关注系统** | 关注/取关作者、粉丝列表、关注列表 |
 | **创作者中心** | 视频管理、分片上传、发布配置、数据统计 |
+| **AI 视频元数据优化** | 发布视频时一键 AI 优化标题、标签、简介（DeepSeek 大模型） |
 | **消息通知** | WebSocket 实时推送（评论回复、点赞、关注等） |
 | **用户主页** | 个人资料编辑、播放历史、收藏夹、主题切换 |
 | **暗黑模式** | CSS 变量驱动的暗黑/亮色主题切换，跟随系统偏好 |
@@ -74,8 +78,49 @@ Kilikili 是一个前后端分离的视频分享平台，提供完整的视频�
 | **分类管理** | 二级分类增删改查、排序、图标与背景图 |
 | **弹幕管理** | 弹幕列表浏览与删除 |
 | **评论管理** | 评论列表、审核与删除 |
+| **AI 智能审核** | 自动审核评论/弹幕内容，违规即时屏蔽，支持按审核状态筛选 |
 | **系统设置** | 全局配置项管理 |
 | **操作日志** | 后台操作审计日志 |
+
+## AI 功能
+
+平台集成了 **DeepSeek V4 Flash** 大模型，提供两个轻量级 AI 功能：
+
+### 1. AI 内容审核助手
+
+用户发布评论或弹幕时，系统异步调用 LLM 对文本内容进行安全审核，自动识别色情、暴力、仇恨言论、广告 spam 等违规内容。
+
+```
+用户发评论/弹幕 → status=1(正常), auditStatus=0(未审核), 写库
+    ↓ (异步, aiExecutor 线程池)
+DeepSeek LLM 审核 → 返回 1(通过) / 2(可疑) / 3(违规)
+    ↓
+├── 通过 → 仅更新 audit_status=1
+├── 可疑 → 更新 audit_status=2，管理员后台可见高亮
+└── 违规 → 更新 audit_status=3 + status=2(隐藏)，用户端不可见
+```
+
+**关键设计**：
+- **故障隔离**：LLM 超时 2s/5s，异常时 `auditStatus` 保持 0，主业务 `status` 永远为 1，绝不回滚
+- **熔断开关**：`ai.audit.enabled: false` 时跳过全部 AI 审核逻辑
+- **线程池隔离**：独立 `aiExecutor`（core=2/max=5，prefix=`ai-`），不与视频转码、评论写入争抢资源
+- **数据脱敏**：Prompt 仅传评论文本，绝不发送用户 ID/IP/手机号/邮箱等 PII
+
+**管理后台操作流**：评论管理 / 弹幕管理 → AI审核列（通过/可疑/违规）→ 按审核状态筛选 → 一键删除。
+
+### 2. AI 视频元数据优化
+
+创作者在发布视频时，点击「AI 智能优化 ✨」按钮，LLM 根据原始标题和简介生成优化建议。
+
+- **优化标题**：20 字以内，吸引眼球但不标题党
+- **推荐标签**：3-5 个精准标签，用于分类和搜索
+- **润色简介**：100 字以内，突出视频亮点
+
+**关键设计**：
+- **独立接口**：`POST /ai/optimizeVideoMeta`，与视频上传主事务完全解耦
+- **防刷限流**：基于 Redisson RRateLimiter，每个用户/IP 每分钟最多 3 次
+- **零 DB 写入**：接口仅返回优化结果到 HTTP Response，用户点击「采纳」后才通过原有 `postVideo` 接口落库
+- **鉴权**：校验登录态，仅限已登录用户调用
 
 ## 技术栈与架构
 
@@ -119,6 +164,10 @@ Kilikili 是一个前后端分离的视频分享平台，提供完整的视频�
                               │   FFmpeg           │
                               │  视频转码(异步)    │
                               └───────────────────┘
+                              ┌───────────────────┐
+                              │   DeepSeek LLM     │
+                              │  AI审核/内容优化   │
+                              └───────────────────┘
 ```
 
 ### 后端技术选型
@@ -139,6 +188,7 @@ Kilikili 是一个前后端分离的视频分享平台，提供完整的视频�
 | **FastJSON** | JSON 序列化 | 高性能 JSON 处理 |
 | **Lombok** | 代码简化 | 减少 POJO 样板代码，提高开发效率 |
 | **HikariCP** | 数据库连接池 | Spring Boot 默认连接池，高性能、轻量级 |
+| **DeepSeek V4 Flash** | AI 大模型 | 性价比极高的大语言模型，OpenAI 兼容 API，用于内容审核与元数据优化 |
 
 ### 前端技术选型
 
@@ -164,6 +214,7 @@ Kilikili 是一个前后端分离的视频分享平台，提供完整的视频�
 4. **分片上传 + 断点续传**：大文件分片上传，前端按片发送，后端合并；上传前预检已有分片实现续传。
 5. **Canvas 弹幕**：使用 Canvas 而非 DOM 元素渲染弹幕，避免大量 DOM 操作导致的性能问题，支持每秒数百条弹幕的流畅渲染。
 6. **弹性存储策略**：本地开发使用 MinIO 或本地文件系统，生产环境切换至阿里云 OSS，代码层面抽象统一接口。
+7. **AI 异步审核管道**：评论/弹幕发布后，通过独立 `aiExecutor` 线程池异步调用 DeepSeek LLM 进行内容审核；超时/异常时降级为"未审核"状态，主业务不受影响。违规内容自动标记隐藏（`status=2`），用户端不可见。支持配置化熔断开关 `ai.audit.enabled`。
 
 ## 挑战与解决方案
 
@@ -280,6 +331,29 @@ npm run dev
 
 默认管理员账号：`admin` / `admin123`（可在 `application.yml` 中修改）。
 
+## AI 配置
+
+在启动前需配置大模型 API 密钥（两个 `application.yml` 均需配置）：
+
+```yaml
+ai:
+  audit:
+    enabled: true                     # false 可关闭 AI 审核
+  llm:
+    endpoint: https://api.deepseek.com/v1/chat/completions
+    api-key: ${MY_AI_KEY}             # 环境变量 MY_AI_KEY=sk-xxx
+    model: deepseek-v4-flash          # 或其他 OpenAI 兼容模型
+```
+
+| 配置项 | 说明 | 默认值 |
+|--------|------|--------|
+| `ai.audit.enabled` | AI 审核总开关，`false` 时跳过所有 AI 审核 | `true` |
+| `ai.llm.endpoint` | LLM API 端点（OpenAI 兼容格式） | DeepSeek |
+| `ai.llm.api-key` | API 密钥，建议通过环境变量注入 | `${MY_AI_KEY:}` |
+| `ai.llm.model` | 模型名称 | `deepseek-v4-flash` |
+
+> 支持任意 OpenAI 兼容 API（如 DeepSeek、OpenAI、Moonshot 等），只需修改 `endpoint` 和 `model` 即可切换。
+
 ## 使用示例
 
 ### 用户端 API 示例
@@ -311,6 +385,30 @@ curl -X POST http://localhost:7071/video/search \
 curl -X POST http://localhost:7071/danmu/postDanmu \
   -d "videoId=xxx&fileId=xxx&text=Hello Kilikili&mode=0&color=%23ffffff&time=10"
 ```
+
+### AI API 示例
+
+**视频元数据优化：**
+```bash
+curl -X POST http://localhost:7071/ai/optimizeVideoMeta \
+  -H "Cookie: token=xxx" \
+  -d "title=Spring Boot入门教程&description=适合新手的Spring Boot教学视频"
+```
+
+返回示例：
+```json
+{
+  "code": 200,
+  "message": "请求成功",
+  "data": {
+    "optimizedTitle": "Spring Boot 零基础入门：30分钟掌握核心概念",
+    "tags": ["Spring Boot", "Java", "后端开发", "入门教程"],
+    "optimizedDescription": "专为编程新手打造的 Spring Boot 快速入门教程。通过实际项目演示，带你轻松掌握..."
+  }
+}
+```
+
+> 前端创作者中心已内置「AI 智能优化」按钮，无需手动调用 API。
 
 ### 前端组件示例
 
@@ -400,6 +498,7 @@ kilikili-all/
 │   │       │   ├── MessageController.java        # 消息通知
 │   │       │   ├── SeriesController.java         # 视频合集
 │   │       │   ├── SysSettingController.java     # 系统设置
+│   │       │   ├── AIController.java             # AI 元数据优化
 │   │       │   └── ABaseController.java          # 基础控制器（Cookie/Token）
 │   │       ├── config/                          # Web 配置（CORS/静态资源/FFmpeg）
 │   │       └── kilikiliWebRunApplication.java   # 启动类
@@ -425,20 +524,21 @@ kilikili-all/
 │           │   ├── Appconfig.java                # 应用全局配置
 │           │   ├── OssConfig.java                # 阿里云 OSS 配置
 │           │   ├── RedisConfig.java              # Redis 序列化配置
-│           │   ├── ThreadPoolConfig.java         # 异步线程池
+│           │   ├── ThreadPoolConfig.java         # 异步线程池(含 aiExecutor)
+│           │   ├── RestTemplateConfig.java       # AI HTTP 客户端(2s/5s超时)
 │           │   ├── WebSocketConfig.java          # WebSocket 端点注册
 │           │   └── ScheduleConfig.java           # 定时任务（清理临时文件）
 │           ├── entity/                     # 数据实体
 │           │   ├── po/                     # 数据库 PO（Video, UserInfo, Comment, Danmu...）
-│           │   ├── dto/                    # 数据传输对象（TokenUserInfoDto）
+│           │   ├── dto/                    # 数据传输对象（TokenUserInfoDto, VideoMetaOptimizeResult...）
 │           │   ├── vo/                     # 视图对象（ResponseVO, PaginationResultVO）
-│           │   ├── enums/                  # 枚举（视频状态、用户行为、评论状态...）
+│           │   ├── enums/                  # 枚举（视频状态、用户行为、评论状态、AI审核状态...）
 │           │   ├── query/                  # 查询参数封装
 │           │   └── constants/              # 常量定义
 │           ├── mappers/                    # MyBatis Mapper 接口
 │           ├── service/                    # 服务接口 + 实现
-│           │   ├── impl/                   # 业务逻辑实现（VideoServiceImpl, UserInfoServiceImpl...）
-│           │   └── ...Service.java         # 服务接口
+│           │   ├── impl/                   # 业务逻辑实现（AIServiceImpl, AIAuditService...）
+│           │   └── ...Service.java         # 服务接口（AIService, AIVideoService, AIAuditService...）
 │           ├── redis/                      # Redis 工具（RedisUtils）
 │           ├── utils/                      # 工具类
 │           │   ├── FFmpegUtils.java              # FFmpeg 转码封装
@@ -455,7 +555,7 @@ kilikili-all/
 │   │   ├── tsconfig.json
 │   │   ├── package.json
 │   │   └── src/
-│   │       ├── api/                       # API 封装（auth, video, comment, danmu...）
+│   │       ├── api/                       # API 封装（auth, video, comment, danmu, ai...）
 │   │       ├── components/                # 可复用组件
 │   │       │   ├── video/VideoPlayer.vue         # 视频播放器
 │   │       │   ├── danmaku/DanmakuLayer.vue      # 弹幕渲染层（Canvas）
