@@ -10,6 +10,6 @@ import java.util.Map;
 public interface DanmuService {
     void postDanmu(TokenUserInfoDto token, String videoId, String fileId, String text, Integer mode, String color, Integer time);
     List<Danmu> loadDanmu(String fileId, String videoId);
-    PaginationResultVO<Map<String, Object>> loadDanmuByPage(Integer pageNo, Integer pageSize, String videoId, String textFuzzy);
+    PaginationResultVO<Map<String, Object>> loadDanmuByPage(Integer pageNo, Integer pageSize, String videoId, String textFuzzy, Integer auditStatus);
     void delDanmu(String danmuId);
 }

@@ -17,4 +17,5 @@ public interface DanmuMapper {
     Danmu selectByDanmuId(@Param("danmuId") String danmuId);
     List<Danmu> selectListByCondition(@Param("query") DanmuQuery query);
     Long selectCountByCondition(@Param("query") DanmuQuery query);
+    Integer updateAuditStatus(@Param("danmuId") String danmuId, @Param("auditStatus") Integer auditStatus);
 }

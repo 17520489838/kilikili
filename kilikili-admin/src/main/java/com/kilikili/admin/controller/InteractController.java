@@ -23,8 +23,8 @@ public class InteractController extends ABaseController {
     private CommentService commentService;
 
     @RequestMapping("/loadDanmu")
-    public ResponseVO loadDanmu(Integer pageNo, Integer pageSize, String videoId, String textFuzzy) {
-        return getSuccessResponseVO(danmuService.loadDanmuByPage(pageNo, pageSize, videoId, textFuzzy));
+    public ResponseVO loadDanmu(Integer pageNo, Integer pageSize, String videoId, String textFuzzy, Integer auditStatus) {
+        return getSuccessResponseVO(danmuService.loadDanmuByPage(pageNo, pageSize, videoId, textFuzzy, auditStatus));
     }
 
     @RequestMapping("/delDanmu")
@@ -34,12 +34,15 @@ public class InteractController extends ABaseController {
     }
 
     @RequestMapping("/loadComment")
-    public ResponseVO loadComment(Integer pageNo, Integer pageSize, String videoId) {
+    public ResponseVO loadComment(Integer pageNo, Integer pageSize, String videoId, Integer auditStatus) {
         CommentQuery query = new CommentQuery();
         query.setPageNo(pageNo != null ? pageNo : 1);
         query.setPageSize(pageSize != null ? pageSize : 20);
         query.setVideoId(videoId);
-        return getSuccessResponseVO(commentService.loadCommentPage(query));
+        query.setAuditStatus(auditStatus);
+        query.setOrderBy("create_time");
+        query.setOrderDirection("desc");
+        return getSuccessResponseVO(commentService.loadCommentPageForAdmin(query));
     }
 
     @RequestMapping("/delComment")

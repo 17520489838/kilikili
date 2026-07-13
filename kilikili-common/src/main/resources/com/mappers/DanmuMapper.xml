@@ -15,6 +15,7 @@
         <result column="mode" property="mode" jdbcType="INTEGER"/>
         <result column="color" property="color" jdbcType="VARCHAR"/>
         <result column="font_size" property="fontSize" jdbcType="INTEGER"/>
+        <result column="audit_status" property="auditStatus" jdbcType="TINYINT"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
@@ -23,15 +24,15 @@
     <!-- 基础列 -->
     <sql id="Base_Column_List">
         id, danmu_id, video_id, file_id, user_id, content, time_point, mode,
-        color, font_size, create_time, update_time, is_deleted
+        color, font_size, audit_status, create_time, update_time, is_deleted
     </sql>
 
     <!-- 插入弹幕 -->
     <insert id="insert" parameterType="com.kilikili.entity.po.Danmu">
         INSERT INTO kilikili_danmu (
-            danmu_id, video_id, file_id, user_id, content, time_point, mode, color, font_size
+            danmu_id, video_id, file_id, user_id, content, time_point, mode, color, font_size, audit_status
         ) VALUES (
-            #{danmuId}, #{videoId}, #{fileId}, #{userId}, #{content}, #{timePoint}, #{mode}, #{color}, #{fontSize}
+            #{danmuId}, #{videoId}, #{fileId}, #{userId}, #{content}, #{timePoint}, #{mode}, #{color}, #{fontSize}, #{auditStatus}
         )
     </insert>
 
@@ -52,6 +53,8 @@
             <if test="mode != null">mode = #{mode},</if>
             <if test="color != null">color = #{color},</if>
             <if test="fontSize != null">font_size = #{fontSize},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
         </set>
         WHERE danmu_id = #{danmuId}
     </update>
@@ -97,6 +100,8 @@
             <if test="query.timePointStart != null">AND time_point &gt;= #{query.timePointStart}</if>
             <if test="query.timePointEnd != null">AND time_point &lt;= #{query.timePointEnd}</if>
             <if test="query.textFuzzy != null and query.textFuzzy != ''">AND content LIKE CONCAT('%', #{query.textFuzzy}, '%')</if>
+            <if test="query.auditStatus != null">AND audit_status = #{query.auditStatus}</if>
+            <if test="query.isDeleted != null">AND is_deleted = #{query.isDeleted}</if>
         </where>
     </sql>
 
@@ -117,6 +122,13 @@
             LIMIT #{query.pageSize} OFFSET #{query.startIndex}
         </if>
     </select>
+
+    <!-- 更新AI审核状态 -->
+    <update id="updateAuditStatus">
+        UPDATE kilikili_danmu
+        SET audit_status = #{auditStatus}
+        WHERE danmu_id = #{danmuId}
+    </update>
 
     <!-- 根据条件查询数量 -->
     <select id="selectCountByCondition" resultType="java.lang.Long">

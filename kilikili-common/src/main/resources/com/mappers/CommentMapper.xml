@@ -16,6 +16,7 @@
         <result column="like_count" property="likeCount" jdbcType="INTEGER"/>
         <result column="top_type" property="topType" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="audit_status" property="auditStatus" jdbcType="TINYINT"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
@@ -24,17 +25,17 @@
     <!-- 基础列 -->
     <sql id="Base_Column_List">
         id, comment_id, video_id, user_id, content, img_path, p_comment_id,
-        reply_user_id, like_count, top_type, status, create_time, update_time, is_deleted
+        reply_user_id, like_count, top_type, status, audit_status, create_time, update_time, is_deleted
     </sql>
 
     <!-- 插入评论 -->
     <insert id="insert" parameterType="com.kilikili.entity.po.Comment">
         INSERT INTO kilikili_comment (
             comment_id, video_id, user_id, content, img_path, p_comment_id,
-            reply_user_id, like_count, top_type, status
+            reply_user_id, like_count, top_type, status, audit_status
         ) VALUES (
             #{commentId}, #{videoId}, #{userId}, #{content}, #{imgPath}, #{pCommentId},
-            #{replyUserId}, #{likeCount}, #{topType}, #{status}
+            #{replyUserId}, #{likeCount}, #{topType}, #{status}, #{auditStatus}
         )
     </insert>
 
@@ -56,6 +57,7 @@
             <if test="likeCount != null">like_count = #{likeCount},</if>
             <if test="topType != null">top_type = #{topType},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
         </set>
         WHERE comment_id = #{commentId}
     </update>
@@ -99,6 +101,7 @@
             <if test="query.pCommentId != null and query.pCommentId != ''">AND p_comment_id = #{query.pCommentId}</if>
             <if test="query.pCommentIdNull != null and query.pCommentIdNull == true">AND p_comment_id IS NULL</if>
             <if test="query.status != null">AND status = #{query.status}</if>
+            <if test="query.auditStatus != null">AND audit_status = #{query.auditStatus}</if>
             <if test="query.topType != null">AND top_type = #{query.topType}</if>
             <if test="query.createTimeStart != null">AND create_time &gt;= #{query.createTimeStart}</if>
             <if test="query.createTimeEnd != null">AND create_time &lt;= #{query.createTimeEnd}</if>
@@ -122,6 +125,20 @@
             LIMIT #{query.pageSize} OFFSET #{query.startIndex}
         </if>
     </select>
+
+    <!-- 更新AI审核状态 -->
+    <update id="updateAuditStatus">
+        UPDATE kilikili_comment
+        SET audit_status = #{auditStatus}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 更新业务状态 -->
+    <update id="updateStatus">
+        UPDATE kilikili_comment
+        SET status = #{status}
+        WHERE comment_id = #{commentId}
+    </update>
 
     <!-- 根据条件查询数量 -->
     <select id="selectCountByCondition" resultType="java.lang.Long">

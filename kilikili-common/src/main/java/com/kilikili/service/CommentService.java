@@ -14,6 +14,7 @@ public interface CommentService {
     void cancelTopComment(String commentId, String userId);
     void userDelComment(String commentId, String userId);
     PaginationResultVO<Comment> loadCommentPage(CommentQuery query);
+    PaginationResultVO<Map<String, Object>> loadCommentPageForAdmin(CommentQuery query);
     void delCommentByAdmin(String commentId);
     void likeComment(TokenUserInfoDto token, String commentId, String videoId);
     PaginationResultVO<Map<String, Object>> loadReply(String videoId, String commentId, Integer pageNo);

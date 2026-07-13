@@ -13,4 +13,6 @@ public class DanmuQuery extends BaseParma {
     private Integer timePointStart;
     private Integer timePointEnd;
     private String textFuzzy;
+    private Integer auditStatus;
+    private Integer isDeleted;
 }

@@ -32,4 +32,5 @@ public class Danmu implements Serializable {
     private Date updateTime;
 
     private Integer isDeleted;
+    private Integer auditStatus;
 }

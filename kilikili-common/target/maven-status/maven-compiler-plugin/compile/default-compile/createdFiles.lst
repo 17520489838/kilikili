@@ -13,14 +13,17 @@ com\kilikili\service\impl\UserCollectionServiceImpl.class
 com\kilikili\entity\po\Category.class
 com\kilikili\service\impl\PlayHistoryServiceImpl.class
 com\kilikili\entity\query\UserActionQuery.class
+com\kilikili\service\AIVideoService.class
 com\kilikili\service\impl\VideoFileServiceImpl.class
 com\kilikili\entity\query\SimplePage.class
 com\kilikili\entity\po\Comment.class
 com\kilikili\service\impl\VideoServiceImpl.class
+com\kilikili\entity\dto\VideoMetaOptimizeResult.class
 com\kilikili\utils\CopyTools.class
 com\kilikili\mappers\MessageMapper.class
 com\kilikili\service\UserInfoService.class
 com\kilikili\service\impl\MessageServiceImpl.class
+com\kilikili\service\AIAuditService.class
 com\kilikili\service\impl\UserActionServiceImpl.class
 com\kilikili\service\impl\VideoSeriesServiceImpl.class
 com\kilikili\entity\enums\UserStatusEnum.class
@@ -57,11 +60,13 @@ com\kilikili\redis\RedisConfig.class
 com\kilikili\entity\enums\MessageTypeEnum.class
 com\kilikili\entity\po\Video.class
 com\kilikili\service\PlayHistoryService.class
+com\kilikili\service\PromptTemplateService.class
 com\kilikili\entity\vo\PaginationResultVO.class
 com\kilikili\service\SysSettingService.class
 com\kilikili\config\Appconfig.class
 com\kilikili\service\VideoSeriesService.class
 com\kilikili\entity\query\DanmuQuery.class
+com\kilikili\service\impl\AIServiceImpl.class
 com\kilikili\mappers\SeriesVideoMapper.class
 com\kilikili\entity\query\PlayHistoryQuery.class
 com\kilikili\entity\po\UserWatchHistory.class
@@ -76,6 +81,7 @@ com\kilikili\service\VideoTranscodeService.class
 com\kilikili\entity\constants\Constants.class
 com\kilikili\entity\enums\VideoStatusEnum.class
 com\kilikili\entity\query\VideoPQuery.class
+com\kilikili\entity\enums\AuditStatusEnum.class
 com\kilikili\entity\po\SeriesVideo.class
 com\kilikili\service\CategoryService.class
 com\kilikili\service\OperationLogService.class
@@ -92,7 +98,9 @@ com\kilikili\service\impl\UserInfoServiceImpl.class
 com\kilikili\entity\po\UserInfo.class
 com\kilikili\entity\query\SeriesVideoQuery.class
 com\kilikili\config\OssConfig.class
+com\kilikili\service\impl\AIVideoServiceImpl.class
 com\kilikili\service\impl\StatisticsServiceImpl.class
+com\kilikili\service\AIService.class
 com\kilikili\entity\po\VideoFile.class
 com\kilikili\service\VideoService.class
 com\kilikili\entity\query\UserFocusQuery.class
@@ -113,5 +121,6 @@ com\kilikili\redis\RedisUtils.class
 com\kilikili\mappers\CategoryMapper.class
 com\kilikili\service\UserWatchHistoryService.class
 com\kilikili\utils\StringTools.class
+com\kilikili\config\RestTemplateConfig.class
 com\kilikili\entity\query\CommentQuery.class
 com\kilikili\mappers\VideoSeriesMapper.class

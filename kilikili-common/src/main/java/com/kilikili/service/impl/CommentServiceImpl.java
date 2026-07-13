@@ -7,6 +7,7 @@ import com.kilikili.entity.po.Comment;
 import com.kilikili.entity.po.UserAction;
 import com.kilikili.entity.po.UserInfo;
 import com.kilikili.entity.po.Video;
+import com.kilikili.entity.po.Video;
 import com.kilikili.entity.query.CommentQuery;
 import com.kilikili.entity.query.SimplePage;
 import com.kilikili.entity.vo.PaginationResultVO;
@@ -17,7 +18,9 @@ import com.kilikili.mappers.UserInfoMapper;
 import com.kilikili.mappers.VideoMapper;
 import com.kilikili.service.CommentService;
 import com.kilikili.service.MessageService;
+import com.kilikili.service.AIAuditService;
 import com.kilikili.utils.StringTools;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +47,11 @@ public class CommentServiceImpl implements CommentService {
     private MessageService messageService;
     @Resource
     private UserActionMapper userActionMapper;
+    @Resource
+    private AIAuditService aiAuditService;
+
+    @Value("${ai.audit.enabled:false}")
+    private Boolean aiAuditEnabled;
 
     /**
      * Enrich a list of comments with user info (nickName, avatar)
@@ -88,6 +96,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(content);
         comment.setImgPath(imgPath);
         comment.setStatus(1); // audit pass
+        comment.setAuditStatus(0);
         comment.setLikeCount(0);
         comment.setTopType(0);
 
@@ -110,6 +119,11 @@ public class CommentServiceImpl implements CommentService {
             messageService.addMessage(video.getUserId(), token.getUserId(),
                     MessageTypeEnum.COMMENT.getCode(), content, videoId);
         }
+
+        // Async AI audit
+        if (Boolean.TRUE.equals(aiAuditEnabled)) {
+            aiAuditService.auditCommentAsync(comment.getCommentId(), content);
+        }
     }
 
     @Override
@@ -121,6 +135,8 @@ public class CommentServiceImpl implements CommentService {
 
         // Filter top-level comments only (p_comment_id IS NULL)
         query.setPCommentIdNull(true);
+        // Only show visible comments
+        query.setStatus(1);
 
         // orderType: 0 = time desc, 1 = hot (like_count desc)
         if (orderType != null && orderType == 1) {
@@ -151,6 +167,7 @@ public class CommentServiceImpl implements CommentService {
             replyQuery.setPageSize(200); // Load up to 200 replies total for the page
             replyQuery.setOrderBy("create_time");
             replyQuery.setOrderDirection("asc");
+            replyQuery.setStatus(1);
 
             List<Comment> allReplies = new ArrayList<>();
             for (String parentId : parentIds) {
@@ -160,6 +177,7 @@ public class CommentServiceImpl implements CommentService {
                 pq.setPageSize(null);
                 pq.setOrderBy("create_time");
                 pq.setOrderDirection("asc");
+                pq.setStatus(1);
                 List<Comment> replies = commentMapper.selectListByCondition(pq);
                 if (replies != null && !replies.isEmpty()) {
                     enrichComments(replies);
@@ -295,6 +313,48 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public PaginationResultVO<Map<String, Object>> loadCommentPageForAdmin(CommentQuery query) {
+        if (query.getPageNo() == null) query.setPageNo(1);
+        if (query.getPageSize() == null) query.setPageSize(20);
+
+        Long totalCount = commentMapper.selectCountByCondition(query);
+        SimplePage simplePage = new SimplePage(query.getPageNo(), query.getPageSize(), totalCount);
+
+        List<Comment> list = commentMapper.selectListByCondition(query);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (Comment c : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("commentId", c.getCommentId());
+            map.put("content", c.getContent());
+            map.put("likeCount", c.getLikeCount());
+            map.put("postTime", c.getCreateTime() != null ? SDF.format(c.getCreateTime()) : "");
+            map.put("auditStatus", c.getAuditStatus());
+
+            // Enrich user info
+            if (c.getUserId() != null) {
+                UserInfo user = userInfoMapper.selectByUserId(c.getUserId());
+                map.put("nickName", user != null ? user.getNickName() : c.getUserId());
+                map.put("avatar", user != null ? user.getAvatar() : "");
+            } else {
+                map.put("nickName", "匿名");
+                map.put("avatar", "");
+            }
+
+            // Enrich video info
+            if (c.getVideoId() != null) {
+                Video video = videoMapper.selectByVideoId(c.getVideoId());
+                map.put("videoName", video != null ? video.getVideoName() : c.getVideoId());
+            } else {
+                map.put("videoName", "-");
+            }
+
+            resultList.add(map);
+        }
+        return new PaginationResultVO<>(simplePage, resultList);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delCommentByAdmin(String commentId) {
         commentMapper.deleteByCommentId(commentId);
@@ -344,6 +404,7 @@ public class CommentServiceImpl implements CommentService {
         query.setPageSize(20);
         query.setOrderBy("create_time");
         query.setOrderDirection("asc");
+        query.setStatus(1);
 
         Long totalCount = commentMapper.selectCountByCondition(query);
         SimplePage simplePage = new SimplePage(query.getPageNo(), query.getPageSize(), totalCount);

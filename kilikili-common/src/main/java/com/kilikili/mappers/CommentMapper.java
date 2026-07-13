@@ -18,4 +18,6 @@ public interface CommentMapper {
     Comment selectByCommentId(@Param("commentId") String commentId);
     List<Comment> selectListByCondition(@Param("query") CommentQuery query);
     Long selectCountByCondition(@Param("query") CommentQuery query);
+    Integer updateAuditStatus(@Param("commentId") String commentId, @Param("auditStatus") Integer auditStatus);
+    Integer updateStatus(@Param("commentId") String commentId, @Param("status") Integer status);
 }

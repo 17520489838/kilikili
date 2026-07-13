@@ -2,6 +2,7 @@ com\kilikili\web\controller\UcenterController.class
 com\kilikili\web\controller\CategoryController.class
 com\kilikili\web\config\WebMvcConfig.class
 com\kilikili\web\controller\MessageController.class
+com\kilikili\web\controller\AIController.class
 com\kilikili\web\controller\FileController.class
 com\kilikili\web\controller\AGlobalExceptionHandlerController.class
 com\kilikili\web\controller\HistoryController.class

@@ -32,6 +32,7 @@ public class Comment implements Serializable {
     private Integer likeCount;
     private Integer topType;
     private Integer status;
+    private Integer auditStatus;
 
     /** Frontend alias: postTime */
     @JsonProperty("postTime")

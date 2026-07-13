@@ -13,7 +13,9 @@ import com.kilikili.mappers.UserInfoMapper;
 import com.kilikili.mappers.VideoMapper;
 import com.kilikili.redis.RedisUtils;
 import com.kilikili.service.DanmuService;
+import com.kilikili.service.AIAuditService;
 import com.kilikili.utils.StringTools;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,11 @@ public class DanmuServiceImpl implements DanmuService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private RedisUtils<Object> redisUtils;
+    @Resource
+    private AIAuditService aiAuditService;
+
+    @Value("${ai.audit.enabled:false}")
+    private Boolean aiAuditEnabled;
 
     private static final String REDIS_KEY_DANMU = Constants.REDIS_KEY_PREFIX + "danmu:";
 
@@ -50,6 +57,7 @@ public class DanmuServiceImpl implements DanmuService {
         danmu.setMode(mode != null ? mode : 1);
         danmu.setColor(color != null ? color : "#FFFFFF");
         danmu.setFontSize(25);
+        danmu.setAuditStatus(0);
         danmu.setCreateTime(new Date());
         danmuMapper.insert(danmu);
 
@@ -59,6 +67,11 @@ public class DanmuServiceImpl implements DanmuService {
         // Clear cache so it gets refreshed on next load
         String cacheKey = REDIS_KEY_DANMU + fileId + "_" + videoId;
         redisUtils.delete(cacheKey);
+
+        // Async AI audit
+        if (Boolean.TRUE.equals(aiAuditEnabled)) {
+            aiAuditService.auditDanmuAsync(danmu.getDanmuId(), text);
+        }
     }
 
     @Override
@@ -79,6 +92,7 @@ public class DanmuServiceImpl implements DanmuService {
         if (videoId != null && !videoId.isEmpty()) {
             query.setVideoId(videoId);
         }
+        query.setIsDeleted(0);
         List<Danmu> list = danmuMapper.selectListByCondition(query);
 
         // Cache in Redis
@@ -89,12 +103,13 @@ public class DanmuServiceImpl implements DanmuService {
     }
 
     @Override
-    public PaginationResultVO<Map<String, Object>> loadDanmuByPage(Integer pageNo, Integer pageSize, String videoId, String textFuzzy) {
+    public PaginationResultVO<Map<String, Object>> loadDanmuByPage(Integer pageNo, Integer pageSize, String videoId, String textFuzzy, Integer auditStatus) {
         DanmuQuery query = new DanmuQuery();
         query.setPageNo(pageNo != null ? pageNo : 1);
         query.setPageSize(pageSize != null ? pageSize : 20);
         query.setVideoId(videoId);
         query.setTextFuzzy(textFuzzy);
+        query.setAuditStatus(auditStatus);
         query.setOrderBy("create_time");
         query.setOrderDirection("desc");
 
@@ -112,6 +127,7 @@ public class DanmuServiceImpl implements DanmuService {
             map.put("createTime", d.getCreateTime());
             map.put("videoId", d.getVideoId());
             map.put("userId", d.getUserId());
+            map.put("auditStatus", d.getAuditStatus());
 
             // Get user nickname
             if (d.getUserId() != null) {

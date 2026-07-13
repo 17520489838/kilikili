@@ -60,6 +60,14 @@ oss:
   accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
   bucketName: yzh-myai
 
+ai:
+  audit:
+    enabled: true
+  llm:
+    endpoint: https://api.deepseek.com/v1/chat/completions
+    api-key: ${MY_AI_KEY}
+    model: deepseek_v4_flush
+
 management:
   health:
     elasticsearch:
